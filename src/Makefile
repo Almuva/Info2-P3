@@ -42,7 +42,7 @@ LIBS = -DHAVE_CONFIG_H -D_REENTRANT -D_FILE_OFFSET_BITS=64 -I/usr/include/ImageM
 # PRUEBA
 
 PRUEBA = prueba
-OBJPRUEBA = main_p3.o Imagen.o inout.o utiles.o mg.o seam_finding.o
+OBJPRUEBA = main_p3.o Imagen.o inout.o utiles.o mg.o seam_finding.o quilting.o
 
 installprueba: $(bindir)/$(PRUEBA)
 $(bindir)/prueba: $(OBJ)/prueba
