@@ -66,7 +66,7 @@ int main(int argc,char **argv)
 	Imagen IMoutG(rows_IMout, cols_IMout, 0.0);
 	Imagen IMoutB(rows_IMout, cols_IMout, 0.0);
 
-	quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
+	//quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
 
 	
 /*
@@ -156,16 +156,24 @@ int main(int argc,char **argv)
 		it++;
 	}
 */
-
-	Imagen extret(20,20);
-	if(!extret.extrae(texR,1,0)){cout<<"NO EXTRET"<<endl;}
-
-	escribe((char*)"extret.png",extret);
+	Imagen extret(tam_Bi,tam_Bi);
 
 	cout<<"Creando nueva imagen"<<endl;
-	IMoutR=texR;
-	IMoutG=texG;
-	IMoutB=texB;
+
+	unsigned int v,h,V=texR.fils()-extret.fils(),H=texR.cols()-extret.cols();
+	for(unsigned int i=0;i<IMoutR.fils();i+=extret.fils())
+		for(unsigned int j=0;j<IMoutR.cols();j+=extret.cols())
+		{
+			v=rand()%V;h=rand()%H;
+
+			extret.extrae(texR,v,h);
+			IMoutR.agrega(extret,i,j);
+			extret.extrae(texG,v,h);
+			IMoutG.agrega(extret,i,j);
+			extret.extrae(texB,v,h);
+			IMoutB.agrega(extret,i,j);
+		}
+
 	escribe(salida_char,IMoutR,IMoutG,IMoutB);
 
 	return 0;

@@ -177,13 +177,13 @@ void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 
 bool Imagen::extrae(Imagen& I,unsigned int F,unsigned int C)
 {
-	unsigned int fils=dim[0],cols=dim[1];
-	if(I.fils()<fils+F || I.cols()<cols+C){return false;}
+	unsigned int fils=dim[0],cols=dim[1],i=0;
+	if(I.fils()<fils+F || I.cols()<cols+C){return false;}//check
 
-	for(unsigned int f=F;f<fils;f++)
-		for(unsigned int c=C;c<cols;c++)
+	for(unsigned int f=F;f<fils+F;f++)
+		for(unsigned int c=C;c<cols+C;c++)
 		{
-			datos[f*cols+c]=I(f,c);
+			datos[i]=I(f,c);i++;
 		}
 	return true;
 }
