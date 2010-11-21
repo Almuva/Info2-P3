@@ -8,13 +8,13 @@
 #include <Magick++.h>
 #include <iostream> 
 
-#include <mg.h>
-#include <seam_finding.h>
+#include "mg.h"
+#include "seam_finding.h"
+#include "quilting.h"
 
 using namespace std; 
 using namespace Magick; 
 
-Imagen texR,texG,texB;
 
 void uso()
 {
@@ -27,13 +27,13 @@ void casos_error(Imagen & texR, unsigned int tam_Bi, unsigned int rows_IMout, un
 	//Al tamaño de Bi le sumamos el margen (1/6 de la dimensión)
 	if( tam_Bi+2*tam_Bi/6 > texR.fils() || tam_Bi+2*tam_Bi/6 > texR.cols() )
 	{
-		fprintf(stderr, "Bi+margenes(1/6 de Bi) debe caber dentro de la imagen de entrada!! \n");
+		fprintf(stderr, "ERROR: Bi+margenes(1/6 de Bi) debe caber dentro de la imagen de entrada!! \n");
 		exit(1);
 	}
 	
 	if( rows_IMout < texR.fils() || cols_IMout < texR.cols() )
 	{
-		fprintf(stderr, "La imagen de salida debe ser más grande que la de entrada!! \n");
+		fprintf(stderr, "ERROR: La imagen de salida debe ser más grande que la de entrada!! \n");
 		exit(1);
 	}
 }
@@ -52,7 +52,7 @@ int main(int argc,char **argv)
 	int rows_IMout = abs( atoi(*argv++) );
 	int cols_IMout = abs( atoi(*argv++) );
 
-	//RGB son variables globales
+	Imagen texR,texG,texB;
 	texR=lee(entrada_char,0);
 	texG=lee(entrada_char,1);
 	texB=lee(entrada_char,2);
@@ -64,11 +64,9 @@ int main(int argc,char **argv)
 	Imagen IMoutR(rows_IMout, cols_IMout, 0.0);
 	Imagen IMoutG(rows_IMout, cols_IMout, 0.0);
 	Imagen IMoutB(rows_IMout, cols_IMout, 0.0);
-
-
-
-cout << "A " << tam_Bi << "habría que añadirle " << 2*tam_Bi/6 << " píxeles..." << endl;
 	
+	
+	quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
 
 	
 /*
