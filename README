@@ -3,3 +3,8 @@ add lo_que_sea (((si es un archivo nuevo O SI SE HA MODIFICADO!!)))
 (((git status para ver estado)))
 git commit -m "comentario"
 git push origin master (((tengo que hacer esto para que se actualice la página web...)))
+
+
+---------
+
+mola: para hacer un add de los archivos modificados ya añadidos, usar [  git add -u  ]

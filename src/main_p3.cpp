@@ -65,6 +65,9 @@ int main(int argc,char **argv)
 	Imagen IMoutG(rows_IMout, cols_IMout, 0.0);
 	Imagen IMoutB(rows_IMout, cols_IMout, 0.0);
 
+
+
+cout << "hola!\n" << endl;
 	
 
 	
@@ -103,7 +106,7 @@ int main(int argc,char **argv)
 				
 				E.resize_erase(E.fils()+r, E.cols());
 			}
-				/*if(cols_out)
+				if(cols_out)
 				{
 					find_v_seam(E,E);
 					columnOut(E,1);
@@ -112,8 +115,8 @@ int main(int argc,char **argv)
 					E.resize_erase(E.fils(), E.cols()+1);
 					cols_out--;
 				}
-				*/
-/*			
+				
+			
 			//exit(1);
 		}
 		///////////////////////////////////////////////////// A D D //
