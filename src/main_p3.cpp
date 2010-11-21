@@ -56,7 +56,7 @@ int main(int argc,char **argv)
 	texR=lee(entrada_char,0);
 	texG=lee(entrada_char,1);
 	texB=lee(entrada_char,2);
-	
+
 //comprueba que los parámetros sean correctos
 	casos_error(texR, tam_Bi, rows_IMout, cols_IMout);
 
@@ -64,8 +64,7 @@ int main(int argc,char **argv)
 	Imagen IMoutR(rows_IMout, cols_IMout, 0.0);
 	Imagen IMoutG(rows_IMout, cols_IMout, 0.0);
 	Imagen IMoutB(rows_IMout, cols_IMout, 0.0);
-	
-	
+
 	quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
 
 	
@@ -80,7 +79,6 @@ int main(int argc,char **argv)
 		crea_energias(uB,E);
 		E*=1/3.0;
 
-		// A D D /////////////////////////////////////////////////////
 		if(rows_out >= 0 && cols_out >= 0)
 		{
 			// cout<<"x"<<endl;
@@ -117,7 +115,6 @@ int main(int argc,char **argv)
 			
 			//exit(1);
 		}
-		///////////////////////////////////////////////////// A D D //
 		else if(rows_out <= 0 && cols_out <= 0)
 		{
 			if(rows_out != 0)
@@ -161,11 +158,12 @@ int main(int argc,char **argv)
 
 	cout<<"Creando nueva imagen"<<endl;
 
-	if(!fork()){
-		strcat(salida_char,".png");
-		escribe(salida_char,IMoutR,IMoutG,IMoutB);
-		exit(1);
-	}
+	IMoutR=texR;
+	IMoutG=texG;
+	IMoutB=texB;
+
+	strcat(salida_char,".png");
+	escribe(salida_char,IMoutR,IMoutG,IMoutB);
 
 	return 0;
 }
