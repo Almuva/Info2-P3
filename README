@@ -12,4 +12,4 @@ mola: para hacer un add de los archivos modificados ya añadidos, usar [  git ad
 ---------
 
 Resolver conflictos cuando no deja hacer push:
---git fetch origin; git merge origin/master  (((hace un merge automático)))
+--git fetch origin; git merge origin/master  OH YEAH!!! (((hace un merge automático)))
