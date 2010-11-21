@@ -18,15 +18,16 @@ Imagen texR,texG,texB;
 
 void uso()
 {
-	fprintf(stderr,"Uso: prueba imagen_entrada(textura) imagen_salida filas_Bi columnas_Bi filas_img_salida columnas_img_salida\n");
+	fprintf(stderr,"Uso: prueba imagen_entrada(textura) imagen_salida tamanyo_lado_Bi filas_img_salida columnas_img_salida\n");
 	exit(1);
 }
 
-void casos_error(Imagen & texR, unsigned int rows_Bi, unsigned int cols_Bi, unsigned int rows_IMout, unsigned int cols_IMout)
+void casos_error(Imagen & texR, unsigned int tam_Bi, unsigned int rows_IMout, unsigned int cols_IMout)
 {
-	if( rows_Bi > texR.fils() || cols_Bi > texR.cols() )
+	//Al tamaño de Bi le sumamos el margen (1/6 de la dimensión)
+	if( tam_Bi+2*tam_Bi/6 > texR.fils() || tam_Bi+2*tam_Bi/6 > texR.cols() )
 	{
-		fprintf(stderr, "Bi debe caber dentro de la imagen de entrada!! \n");
+		fprintf(stderr, "Bi+margenes(1/6 de Bi) debe caber dentro de la imagen de entrada!! \n");
 		exit(1);
 	}
 	
@@ -40,15 +41,14 @@ void casos_error(Imagen & texR, unsigned int rows_Bi, unsigned int cols_Bi, unsi
 int main(int argc,char **argv)
 {
 //verifica que la cantidad de argumentos es correcta 
-	if(argc<7)
+	if(argc<6)
 		uso();
 
 //obtiene las variables de la entrada
 	argv++;
 	char * entrada_char=*argv++;
 	char * salida_char=*argv++;
-	int rows_Bi = abs( atoi(*argv++) );
-	int cols_Bi = abs( atoi(*argv++) );
+	int tam_Bi = abs( atoi(*argv++) );
 	int rows_IMout = abs( atoi(*argv++) );
 	int cols_IMout = abs( atoi(*argv++) );
 
@@ -58,7 +58,7 @@ int main(int argc,char **argv)
 	texB=lee(entrada_char,2);
 	
 //comprueba que los parámetros sean correctos
-	casos_error(texR, rows_Bi, cols_Bi, rows_IMout, cols_IMout);
+	casos_error(texR, tam_Bi, rows_IMout, cols_IMout);
 
 //se crea cada componente de la imagen de salida, todo a cero
 	Imagen IMoutR(rows_IMout, cols_IMout, 0.0);
@@ -67,7 +67,7 @@ int main(int argc,char **argv)
 
 
 
-cout << "hola!\n" << endl;
+cout << "A " << tam_Bi << "habría que añadirle " << 2*tam_Bi/6 << " píxeles..." << endl;
 	
 
 	
