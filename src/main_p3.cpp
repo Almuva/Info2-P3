@@ -65,8 +65,6 @@ int main(int argc,char **argv)
 	Imagen IMoutG(rows_IMout, cols_IMout, 0.0);
 	Imagen IMoutB(rows_IMout, cols_IMout, 0.0);
 
-cout << "A " << tam_Bi << "habría que añadirle " << 2*tam_Bi/6 << " píxeles..." << endl;
-	
 	quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
 
 	
