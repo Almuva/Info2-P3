@@ -56,7 +56,7 @@ int main(int argc,char **argv)
 	texR=lee(entrada_char,0);
 	texG=lee(entrada_char,1);
 	texB=lee(entrada_char,2);
-	
+
 //comprueba que los parámetros sean correctos
 	casos_error(texR, tam_Bi, rows_IMout, cols_IMout);
 
@@ -64,8 +64,6 @@ int main(int argc,char **argv)
 	Imagen IMoutR(rows_IMout, cols_IMout, 0.0);
 	Imagen IMoutG(rows_IMout, cols_IMout, 0.0);
 	Imagen IMoutB(rows_IMout, cols_IMout, 0.0);
-
-
 
 cout << "A " << tam_Bi << "habría que añadirle " << 2*tam_Bi/6 << " píxeles..." << endl;
 	
@@ -163,11 +161,12 @@ cout << "A " << tam_Bi << "habría que añadirle " << 2*tam_Bi/6 << " píxeles..
 
 	cout<<"Creando nueva imagen"<<endl;
 
-	if(!fork()){
-		strcat(salida_char,".png");
-		escribe(salida_char,IMoutR,IMoutG,IMoutB);
-		exit(1);
-	}
+	IMoutR=texR;
+	IMoutG=texG;
+	IMoutB=texB;
+
+	strcat(salida_char,".png");
+	escribe(salida_char,IMoutR,IMoutG,IMoutB);
 
 	return 0;
 }
