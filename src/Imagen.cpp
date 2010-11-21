@@ -175,16 +175,17 @@ void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 	datos=new double[dim[0]*dim[1]];
 }
 
-void Imagen::extraer(Imagen& I,unsigned int F,unsigned int C)
+bool Imagen::extrae(Imagen& I,unsigned int F,unsigned int C)
 {
 	unsigned int fils=dim[0],cols=dim[1];
-	if(I.fils()<fils || I.cols()<cols){throw -1;}
+	if(I.fils()<fils+F || I.cols()<cols+C){return false;}
 
 	for(unsigned int f=F;f<fils;f++)
 		for(unsigned int c=C;c<cols;c++)
 		{
 			datos[f*cols+c]=I(f,c);
 		}
+	return true;
 }
 
 int Imagen::agrega(Imagen & im, unsigned int row, unsigned int col)

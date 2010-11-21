@@ -157,8 +157,8 @@ int main(int argc,char **argv)
 	}
 */
 
-	Imagen extret(10,10);
-	extret.extraer(texR,0,0);
+	Imagen extret(20,20);
+	if(!extret.extrae(texR,1,0)){cout<<"NO EXTRET"<<endl;}
 
 	escribe((char*)"extret.png",extret);
 
