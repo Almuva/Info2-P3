@@ -14,42 +14,60 @@
 using namespace std; 
 using namespace Magick; 
 
-Imagen uR,uG,uB;
+Imagen texR,texG,texB;
 
 void uso()
 {
-	fprintf(stderr,"Uso: prueba imagen_entrada(textura) imagen_salida filas_Bi columnas_Bi\n");
+	fprintf(stderr,"Uso: prueba imagen_entrada(textura) imagen_salida filas_Bi columnas_Bi filas_img_salida columnas_img_salida\n");
 	exit(1);
+}
+
+void casos_error(Imagen & texR, unsigned int rows_Bi, unsigned int cols_Bi, unsigned int rows_IMout, unsigned int cols_IMout)
+{
+	if( rows_Bi > texR.fils() || cols_Bi > texR.cols() )
+	{
+		fprintf(stderr, "Bi debe caber dentro de la imagen de entrada!! \n");
+		exit(1);
+	}
+	
+	if( rows_IMout < texR.fils() || cols_IMout < texR.cols() )
+	{
+		fprintf(stderr, "La imagen de salida debe ser más grande que la de entrada!! \n");
+		exit(1);
+	}
 }
 
 int main(int argc,char **argv)
 {
-	//verifica que la cantidad de argumentos es correcta 
-	if(argc<5)
+//verifica que la cantidad de argumentos es correcta 
+	if(argc<7)
 		uso();
 
+//obtiene las variables de la entrada
 	argv++;
 	char * entrada_char=*argv++;
 	char * salida_char=*argv++;
-	int rows_Bi = atoi(*argv++);
-	int cols_Bi = atoi(*argv++);
+	int rows_Bi = abs( atoi(*argv++) );
+	int cols_Bi = abs( atoi(*argv++) );
+	int rows_IMout = abs( atoi(*argv++) );
+	int cols_IMout = abs( atoi(*argv++) );
 
-	cout<<"Leyendo "<<entrada_char<<endl;
-	//ara RGB son variables globals
-	uR=lee(entrada_char,0);
-	uG=lee(entrada_char,1);
-	uB=lee(entrada_char,2);
+	//RGB son variables globales
+	texR=lee(entrada_char,0);
+	texG=lee(entrada_char,1);
+	texB=lee(entrada_char,2);
+	
+//comprueba que los parámetros sean correctos
+	casos_error(texR, rows_Bi, cols_Bi, rows_IMout, cols_IMout);
 
-	if(   ( (rows_out<0) && (abs(rows_out)>uR.fils()) ) || ( (cols_out<0) && (abs(cols_out)>uR.cols()) )   )
-	{
-		fprintf(stderr, "Valor de las filas o columnas a eliminar demasiado grande! \n");
-	}
+//se crea cada componente de la imagen de salida, todo a cero
+	Imagen IMoutR(rows_IMout, cols_IMout, 0.0);
+	Imagen IMoutG(rows_IMout, cols_IMout, 0.0);
+	Imagen IMoutB(rows_IMout, cols_IMout, 0.0);
 
-	//Se crea la matriz de energias de la matriz
-	Imagen E(uR.fils(), uR.cols());
+	
 
-	unsigned int it = 1;
-	unsigned int total_it = abs(rows_out) + abs(cols_out);
+	
 /*
 	while( (rows_out != 0) || (cols_out != 0) )
 	{
@@ -144,7 +162,7 @@ int main(int argc,char **argv)
 
 	if(!fork()){
 		strcat(salida_char,".png");
-		escribe(salida_char,uR,uG,uB);
+		escribe(salida_char,IMoutR,IMoutG,IMoutB);
 		exit(1);
 	}
 

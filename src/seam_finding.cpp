@@ -35,7 +35,7 @@ unsigned int smallestV(Imagen &cumulativeE){
 	
 	unsigned int v; 
 
-	int min = 10E20; // valor de inicio
+	int min = 10E8; // valor de inicio
 
 	for (unsigned int i=0; i<cumulativeE.fils(); i++){
 		//if (i>330)cout<<i<<":"<<cumulativeE(i,c)<<endl;
@@ -54,7 +54,7 @@ unsigned int smallestH(Imagen &cumulativeE){
 	
 	unsigned int h; 
 
-	int min = 10E20; // valor de inicio
+	int min = 10E8; // valor de inicio
 
 	for (unsigned int j=0; j<cumulativeE.cols(); j++){
 		if (cumulativeE(f,j)<min){
