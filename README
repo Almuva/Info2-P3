@@ -1,0 +1,5 @@
+Para commitear uso:
+add lo_que_sea (((si es un archivo nuevo)))
+(((git status para ver estado)))
+git commit -m "comentario"
+git push origin master (((tengo que hacer esto para que se actualice la página web...)))
