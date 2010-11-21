@@ -23,19 +23,27 @@ class Imagen
 	unsigned int area(){return dim[0]*dim[1];}
 	inline double & operator()(unsigned int i, unsigned int j)
 	{
-		//ahora evita leer fuera de rango
+		//evita leer fuera de rango
 		const unsigned int N=5;
-		if(i>=dim[0]){
-			if(i-dim[0]<=N){		//sale por abajo
+		if(i>=dim[0])
+		{
+			if(i-dim[0]<=N)	//sale por abajo
+			{
 				i=dim[0]*2-(i+2);
-			}else{					//sale por arriba
+			}
+			else	//sale por arriba
+			{
 				i=-i;
 			}
 		}
-		if(j>=dim[1]){
-			if(j-dim[1]<=N){		//sale por la derecha
+		if(j>=dim[1])
+		{
+			if(j-dim[1]<=N)	//sale por la derecha
+			{
 				j=dim[1]*2-(j+2);
-			}else{					//sale por la izquierda
+			}
+			else	//sale por la izquierda
+			{
 				j=-j;
 			}
 		}
@@ -48,6 +56,7 @@ class Imagen
 
 	void recorta(float M,float m);
 	Imagen & desplaza(int dim, int paso);
+	void extraer(Imagen& I,unsigned int f,unsigned int c);
 };
 
 Imagen & lee(char * archima, int campo);

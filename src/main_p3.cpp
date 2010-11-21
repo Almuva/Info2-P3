@@ -51,6 +51,7 @@ int main(int argc,char **argv)
 	int tam_Bi = abs( atoi(*argv++) );
 	int rows_IMout = abs( atoi(*argv++) );
 	int cols_IMout = abs( atoi(*argv++) );
+	strcat(salida_char,".png");
 
 	Imagen texR,texG,texB;
 	texR=lee(entrada_char,0);
@@ -156,13 +157,15 @@ int main(int argc,char **argv)
 	}
 */
 
-	cout<<"Creando nueva imagen"<<endl;
+	Imagen extret(10,10);
+	extret.extraer(texR,0,0);
 
+	escribe((char*)"extret.png",extret);
+
+	cout<<"Creando nueva imagen"<<endl;
 	IMoutR=texR;
 	IMoutG=texG;
 	IMoutB=texB;
-
-	strcat(salida_char,".png");
 	escribe(salida_char,IMoutR,IMoutG,IMoutB);
 
 	return 0;
