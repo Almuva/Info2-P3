@@ -34,7 +34,6 @@ Imagen::Imagen(unsigned int fil, unsigned int col, float val)
 	datos=new double[largo];
 	for(unsigned int i=0; i<largo;i++)
 		datos[i]=val;
-//	memset(datos,val,largo*sizeof(double));
 }
 
 Imagen::~Imagen()
@@ -177,3 +176,48 @@ void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 	datos=new double[dim[0]*dim[1]];
 
 }
+
+int Imagen::agrega(Imagen & im, unsigned int row, unsigned int col)
+{
+	if(  (row > dim[0]-1) || (col > dim[1]-1)  ) return 1;
+
+	unsigned int index_im = 0; //Para ir leyando im
+	
+	unsigned int jump_cols = 0; //Para omitir x ultimas columnas de im
+	
+	//Posiciones de Imagen donde acaba im
+	unsigned int row_end = row + im.fils()-1;
+	unsigned int col_end = col + im.cols()-1;
+	
+	//Si im se sale de la Imagen hay que modificar los finales y...
+	if(row_end > dim[0])
+	{
+		row_end = dim[0]-1;
+	}
+	
+	if(col_end > dim[1])
+	{
+	//...hay que asignar un salto en im.
+		jump_cols = col_end - dim[1]+1;
+		col_end = dim[1]-1;
+	}
+	
+	//bucle de copia
+	for(unsigned int i = row; i<=row_end; i++)
+	{
+		for(unsigned int j = col; j<=col_end; j++)
+		{
+			datos[i*dim[1]+j] = im.datos[index_im];
+			index_im++;
+		}
+		index_im+=jump_cols;
+	}
+	
+	return 0;
+}
+
+
+
+
+
+

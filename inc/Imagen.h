@@ -45,6 +45,7 @@ class Imagen
 	float minval();
 
 	void resize_erase(unsigned int rows, unsigned int cols);
+	int agrega(Imagen & im, unsigned int row, unsigned int col);
 
 	void recorta(float M,float m);
 	Imagen & desplaza(int dim, int paso);
