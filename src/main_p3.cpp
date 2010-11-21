@@ -158,10 +158,6 @@ int main(int argc,char **argv)
 
 	cout<<"Creando nueva imagen"<<endl;
 
-	IMoutR=texR;
-	IMoutG=texG;
-	IMoutB=texB;
-
 	strcat(salida_char,".png");
 	escribe(salida_char,IMoutR,IMoutG,IMoutB);
 
