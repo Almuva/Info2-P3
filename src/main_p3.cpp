@@ -54,6 +54,7 @@ int main(int argc,char **argv)
 	strcat(salida_char,".png");
 
 	Imagen texR,texG,texB;
+
 	texR=lee(entrada_char,0);
 	texG=lee(entrada_char,1);
 	texB=lee(entrada_char,2);

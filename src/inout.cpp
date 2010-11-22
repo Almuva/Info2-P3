@@ -108,7 +108,7 @@ void escribe(char * archima, Imagen & imR, Imagen & imG, Imagen & imB)
 			}
 		im.write(archima);
 
-		exit(1);
+		_exit(1);
 	}
 	return;
 }
@@ -144,7 +144,7 @@ void escribe(char * archima, Imagen & imR)
 				}
 
 		im.write(archima);
-		exit(1);
+		_exit(1);
 	}
 	return;
 }
