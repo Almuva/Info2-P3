@@ -65,18 +65,20 @@ double EnergiaMinimaMargenes(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumM
 		{
 			margenV.extrae(LumTex, i, j);
 			//Se aplica la definición de energia de la práctica
-		//	margenV-=LumMargenV;
-		//	margen*=margen;
-		//	valor=margen.sum(); //%%%Hace falta declarar la función sum() en Imagen
-			valor = compara(LumMargenV, margenV);
+			margenV-=LumMargenV;
+			margenV*=margenV;
+			valor=margenV.sum();
+		//	valor = compara(LumMargenV, margenV);
 			
 			margenH.extrae(LumTex, i, j);
-			valor += compara(LumMargenH, margenH);
+			margenH-=LumMargenH;
+			margenH*=margenH;
+			valor+=margenH.sum();
+		//	valor += compara(LumMargenH, margenH);
 			
 			if(valor < min_energia) min_energia = valor; //%%%Posible refactor: min_energia = min(valor, min_energia);
 		}
 	}
-	
 	return min_energia;
 }
 	
@@ -98,10 +100,16 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargen, double min_energia
 		{
 			margenV.extrae(LumTex, i, j);
 			//Se aplica la definición de energia de la práctica
-			valor = compara(LumMargenV, margenV); //%%%Podría no funcionar
+			margenV-=LumMargenV;
+			margenV*=margenV;
+			valor=margenV.sum();
+		//	valor = compara(LumMargenV, margenV);
 			
 			margenH.extrae(LumTex, i, j);
-			valor += compara(LumMargenH, margenH);
+			margenH-=LumMargenH;
+			margenH*=margenH;
+			valor+=margenH.sum();
+		//	valor += compara(LumMargenH, margenH);
 			
 			
 			if(  (valor <= min_energia+error) && (valor >= min_energia-error)  )

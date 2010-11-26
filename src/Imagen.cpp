@@ -167,6 +167,17 @@ float Imagen::maxval()
 	return m;
 }
 
+//Se llama igual y hace lo mismo que la función de octave
+double Imagen::sum()
+{
+	double suma = 0.0;
+	unsigned int largo=dim[0]*dim[1];
+	for(unsigned int i=0; i<largo; i++)
+		suma+=datos[i];
+
+	return suma;
+}
+
 void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 {
 	delete[] datos;

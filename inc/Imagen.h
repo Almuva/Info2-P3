@@ -54,6 +54,8 @@ class Imagen
 
 	float maxval();
 	float minval();
+	
+	double sum();
 
 	void resize_erase(unsigned int rows, unsigned int cols);
 	int agrega(Imagen & im, unsigned int row, unsigned int col);
