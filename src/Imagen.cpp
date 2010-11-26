@@ -180,27 +180,18 @@ void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 
 }
 
-//Extrae (copia) de this la imagen I, "rows" filas a partir de "row", y "cols" columnas a partir de "col"
+//Extrae (copia) de I una imagen, del tamaño (F, C), del tamaño de this y la asigna.
 //Retorna true si es posible i false sino
-bool Imagen::extrae(unsigned int row, unsigned int col, Imagen& I)
+bool Imagen::extrae(Imagen& I,unsigned int F,unsigned int C)
 {
-	unsigned int rows = I.fils();
-	unsigned int cols = I.cols();
-	
-	if(row+rows > dim[0] || col+cols > dim[1]) //check
-	{
-		std::cout<<"En ''Imagen::extrae(...)'' se lee fuera de rango!!!"<<std::endl; 
-		return false;
-	}
-	
-	unsigned int i=0;
+	unsigned int fils=dim[0],cols=dim[1],i=0;
+	if(I.fils()<fils+F || I.cols()<cols+C){return false;}//check
 
-	for(unsigned int f=row;f<row+rows;f++)
-		for(unsigned int c=col;c<col+cols;c++)
+	for(unsigned int f=F;f<fils+F;f++)
+		for(unsigned int c=C;c<cols+C;c++)
 		{
-			I.datos[i] = datos[f*dim[1]+c]; i++;
+			datos[i]=I(f,c);i++;
 		}
-		
 	return true;
 }
 

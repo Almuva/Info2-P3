@@ -53,7 +53,7 @@ class Imagen
 
 	void resize_erase(unsigned int rows, unsigned int cols);
 	int agrega(Imagen & im, unsigned int row, unsigned int col);
-	bool extrae(unsigned int row, unsigned int col, Imagen& I);
+	extrae(Imagen& I,unsigned int F,unsigned int C)
 
 	void recorta(float M,float m);
 	Imagen & desplaza(int dim, int paso);

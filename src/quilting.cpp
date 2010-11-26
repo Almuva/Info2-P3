@@ -68,8 +68,8 @@ void escogeBiAleatorio(Imagen & IMoutR,
 	max = texR.cols()-tam_Bi-2*tam_margen; 
 	colBi = rand() % max+1;
 	
-	texR.extrae(rowBi, colBi, BiR);
-	texG.extrae(rowBi, colBi, BiG);
-	texB.extrae(rowBi, colBi, BiB);
+	BiR.extrae(texR, rowBi, colBi);
+	BiG.extrae(texG, rowBi, colBi);
+	BiB.extrae(texB, rowBi, colBi);
 }
 
