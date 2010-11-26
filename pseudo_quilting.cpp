@@ -12,12 +12,12 @@ void escogeSiguienteBi(Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 		Imagen & texR, Imagen & texG, Imagen & texB,
 		unsigned int tam_Bi, unsigned int row, unsigned int col)
 {
-     //Creamos una imagen que contiene la suma de los componentes de color de la imagen de textura
+     //Creamos una imagen que contiene la suma de los componentes de color de la imagen de textura. De esta forma no hay que calcularlo cada vez.
 	Imagen LumTex(texR.fils(), texR.cols(), 0.0);//%%% fuera de aquí!!
 	LumTex+=texR; LumTex+=texG; LumTex+=texB;//%%%(tb)
 	
-	
-	
+
+     //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
 	Imagen LumMargenV(tam_Bi+tam_Bi/3, tam_Bi/6);
 	Imagen margenV(LumMargenV.fils(), LumMargenV.cols()); //auxiliar
 	
@@ -25,7 +25,7 @@ void escogeSiguienteBi(Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	margenV.extrae(BiG, row, col); LumMargenV+=margenV;
 	margenV.extrae(BiB, row, col); LumMargenV+=margenV;
 
-	
+     //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
 	Imagen LumMargenH(tam_Bi/6, tam_Bi+tam_Bi/3);
 	Imagen margenH(LumMargenH.fils(), LumMargenH.cols()); //auxiliar
 	
@@ -33,18 +33,18 @@ void escogeSiguienteBi(Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	margenH.extrae(BiG, row, col); LumMargenH+=margenH;
 	margenH.extrae(BiB, row, col); LumMargenH+=margenH;
 	
-     //Si no estamos en la primera columna de IMout, creamos una imagen que contiene las luminancias del margen izquierdo del último Bi añadido a la Imagen.
-	
+     //Primera parte: Obtenemos la energía del margen (forma de L) que más se parece al actual.
 	double min_energia = EnergiaMinimaMargenes(LumTex, LumMargenV, LumMargenH);
 	
+     //Segunda parte: a partir de la energía mínima obtenida, obtenemos las posiciones del inicio del nuevo Bi.
 	unsigned int rowBi, colBi;
 	
-	CoordenadasNuevaBi(LumTex, LumMargen, min_energia, rowBi, colBi) //Modifica inicio de Bi
+	CoordenadasNuevasBi(LumTex, LumMargen, min_energia, rowBi, colBi);
 	
-     //Ahora ya podemos obtener el Bi.
-	IMoutR.extrae(rowBi, colBi, BiR);
-	IMoutG.extrae(rowBi, colBi, BiG);
-	IMoutB.extrae(rowBi, colBi, BiB);
+     //Ahora ya podemos obtener Bi.
+	BiR.extrae(IMoutR, rowBi, colBi);
+	BiG.extrae(IMoutG, rowBi, colBi);
+	BiB.extrae(IMoutB, rowBi, colBi);
 }	
 	
 	
@@ -81,9 +81,8 @@ double EnergiaMinimaMargenes(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumM
 }
 	
 	
-void CoordenadasNuevaBi(Imagen & LumTex, Imagen & LumMargen, double min_energia, unsigned int & rowBi, unsigned int & colBi)
+void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargen, double min_energia, unsigned int & rowBi, unsigned int & colBi)
 {
-
 	double error = min_energia*0.1;
 	
      //Ahora que disponemos del rango de energias que aceptaremos (min_energia+-error), guardamos en una lista las posiciones de los márgenes aceptables.
