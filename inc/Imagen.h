@@ -39,10 +39,7 @@ class Imagen
 			{
 				i=dim[0]*2-(i+2);
 			}
-			else    //sale por arriba
-			{
-				i=-i;
-			}
+			else i=-i;    //sale por arriba
 		}
 		if(j>=dim[1])
 		{
@@ -50,10 +47,7 @@ class Imagen
 			{
 				j=dim[1]*2-(j+2);
 			}
-			else    //sale por la izquierda
-			{
-				j=-j;
-			}
+			else j=-j;    //sale por la izquierda
 		}
 	}
 
@@ -62,7 +56,8 @@ class Imagen
 
 	void resize_erase(unsigned int rows, unsigned int cols);
 	int agrega(Imagen & im, unsigned int row, unsigned int col);
-	bool extrae(Imagen& I,unsigned int F,unsigned int C);
+
+	bool extrae(Imagen& I,unsigned int f,unsigned int c);
 
 	void recorta(float M,float m);
 	Imagen & desplaza(int dim, int paso);

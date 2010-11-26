@@ -169,15 +169,28 @@ float Imagen::maxval()
 
 void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 {
-
 	delete[] datos;
 	dim[0] = rows;
 	dim[1] = cols;
+
 	unsigned int largo = dim[0]*dim[1];
 	datos=new double[largo];
 	for(unsigned int i=0; i<largo;i++)
 		datos[i]=0.0;
+}
 
+bool Imagen::extrae(Imagen& I,unsigned int F,unsigned int C)
+{
+	unsigned int fils=dim[0],cols=dim[1],i=0;
+	if(I.fils()<fils+F || I.cols()<cols+C){return false;}//check
+
+
+	for(unsigned int f=F;f<fils+F;f++)
+		for(unsigned int c=C;c<cols+C;c++)
+		{
+			datos[i]=I(f,c);i++;
+		}
+	return true;
 }
 
 //Extrae (copia) de I una imagen, del tamaño (f, c), del tamaño de this y la asigna.
