@@ -179,29 +179,16 @@ void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 		datos[i]=0.0;
 }
 
-bool Imagen::extrae(Imagen& I,unsigned int F,unsigned int C)
-{
-	unsigned int fils=dim[0],cols=dim[1],i=0;
-	if(I.fils()<fils+F || I.cols()<cols+C){return false;}//check
-
-
-	for(unsigned int f=F;f<fils+F;f++)
-		for(unsigned int c=C;c<cols+C;c++)
-		{
-			datos[i]=I(f,c);i++;
-		}
-	return true;
-}
-
 //Extrae (copia) de I una imagen, del tamaño (f, c), del tamaño de this y la asigna.
 //Retorna true si es posible i false sino
-bool Imagen::extrae(Imagen& I,unsigned int f,unsigned int c)
+bool Imagen::extrae(Imagen& I,unsigned int row,unsigned int col)
 {
-	unsigned int fils=dim[0],cols=dim[1],i=0;
-	if(I.fils()<fils+f || I.cols()<cols+c){return false;}//check
+	if(I.fils()<dim[0]+row || I.cols()<dim[1]+col){return false;}//check: no se pueden pedir valores fuera de la imagen.
+	
+	unsigned int i=0;
 
-	for(unsigned int f=f;f<fils+f;f++)
-		for(unsigned int c=c;c<cols+c;c++)
+	for(unsigned int f=row;f<row+dim[0];f++)
+		for(unsigned int c=col;c<col+dim[1];c++)
 		{
 			datos[i]=I(f,c);i++;
 		}

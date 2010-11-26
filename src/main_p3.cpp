@@ -68,7 +68,7 @@ int main(int argc,char **argv)
 	
 	
 
-	//quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
+	quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
 
 /*	
 	Imagen BiR(tam_Bi, tam_Bi);

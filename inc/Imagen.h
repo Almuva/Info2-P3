@@ -49,6 +49,7 @@ class Imagen
 			}
 			else j=-j;    //sale por la izquierda
 		}
+		return datos[i*dim[1]+j];
 	}
 
 	float maxval();
