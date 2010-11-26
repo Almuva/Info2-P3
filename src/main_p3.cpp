@@ -64,9 +64,26 @@ int main(int argc,char **argv)
 	Imagen IMoutR(rows_IMout, cols_IMout, 0.0);
 	Imagen IMoutG(rows_IMout, cols_IMout, 0.0);
 	Imagen IMoutB(rows_IMout, cols_IMout, 0.0);
+	
+	
 
 	quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
 
+/*	
+	Imagen BiR(tam_Bi, tam_Bi);
+	Imagen BiG(tam_Bi, tam_Bi);
+	Imagen BiB(tam_Bi, tam_Bi);
+	
+	for(unsigned int i=0;i<IMoutR.fils();i+=tam_Bi)
+		for(unsigned int j=0;j<IMoutR.cols();j+=tam_Bi)
+		{
+			escogeBiAleatorio(IMoutR, BiR, BiG, BiB, texR, texG, texB);
+
+			IMoutR.agrega(BiR,i,j);
+			IMoutG.agrega(BiG,i,j);
+			IMoutB.agrega(BiB,i,j);
+		}
+*/
 	
 /*
 	while( (rows_out != 0) || (cols_out != 0) )

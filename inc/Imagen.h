@@ -1,6 +1,13 @@
 #ifndef IMAGEN_H
 #define IMAGEN_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <unistd.h>
+#include <string.h>
+#include <iostream> 
+
 class Imagen
 {
 	public:
@@ -46,6 +53,7 @@ class Imagen
 
 	void resize_erase(unsigned int rows, unsigned int cols);
 	int agrega(Imagen & im, unsigned int row, unsigned int col);
+	bool extrae(unsigned int row, unsigned int col, Imagen& I);
 
 	void recorta(float M,float m);
 	Imagen & desplaza(int dim, int paso);

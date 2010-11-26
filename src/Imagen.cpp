@@ -173,13 +173,50 @@ void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 	delete[] datos;
 	dim[0] = rows;
 	dim[1] = cols;
-	datos=new double[dim[0]*dim[1]];
+	unsigned int largo = dim[0]*dim[1];
+	datos=new double[largo];
+	for(unsigned int i=0; i<largo;i++)
+		datos[i]=0.0;
 
 }
 
+//Extrae (copia) de this la imagen I, "rows" filas a partir de "row", y "cols" columnas a partir de "col"
+//Retorna true si es posible i false sino
+bool Imagen::extrae(unsigned int row, unsigned int col, Imagen& I)
+{
+	unsigned int rows = I.fils();
+	unsigned int cols = I.cols();
+	
+	if(row+rows > dim[0] || col+cols > dim[1]) //check
+	{
+		std::cout<<"En ''Imagen::extrae(...)'' se lee fuera de rango!!!"<<std::endl; 
+		return false;
+	}
+	
+	unsigned int i=0;
+
+	for(unsigned int f=row;f<row+rows;f++)
+		for(unsigned int c=col;c<col+cols;c++)
+		{
+			I.datos[i] = datos[f*dim[1]+c]; i++;
+		}
+		
+	return true;
+}
+
+//Mete en this una imagen más pequeña, im, partiendo de la posición row, col
+//Valores de return: 1 si metiendo im se llega al lateral de this.
+//			2 si metiendo im se llega a la esquina inferior derecha de this.
+//			0 si se mete y no ocurre lo anterior
 int Imagen::agrega(Imagen & im, unsigned int row, unsigned int col)
 {
-	if(  (row > dim[0]-1) || (col > dim[1]-1)  ) return 1;
+	if(  (row > dim[0]-1) || (col > dim[1]-1)  )
+	{
+		fprintf(stderr,"En ''Imagen::agrega(...)'' se lee fuera de rango!!!\n");
+		exit(1);
+	}
+	
+	unsigned int retorno = 0;
 
 	unsigned int index_im = 0; //Para ir leyando im
 	
@@ -190,16 +227,19 @@ int Imagen::agrega(Imagen & im, unsigned int row, unsigned int col)
 	unsigned int col_end = col + im.cols()-1;
 	
 	//Si im se sale de la Imagen hay que modificar los finales y...
-	if(row_end > dim[0])
-	{
-		row_end = dim[0]-1;
-	}
-	
 	if(col_end > dim[1])
 	{
 	//...hay que asignar un salto en im.
 		jump_cols = col_end - dim[1]+1;
 		col_end = dim[1]-1;
+		retorno = 1;
+	}
+	
+	if(row_end > dim[0])
+	{
+		row_end = dim[0]-1;
+		
+		if(retorno == 1) retorno = 2;
 	}
 	
 	//bucle de copia
@@ -213,7 +253,9 @@ int Imagen::agrega(Imagen & im, unsigned int row, unsigned int col)
 		index_im+=jump_cols;
 	}
 	
-	return 0;
+//	std::cout<<"retorno: "<<retorno<<std::endl;
+	
+	return retorno;
 }
 
 
