@@ -1,6 +1,15 @@
 #ifndef SEAMFINDING_H
 #define SEAMFINDING_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+
+#include <Imagen.h>
+#include <Magick++.h>
+#include <iostream> 
+
 double menor (double a, double b, double c);
 
 int minPosition (double a, double b, double c);

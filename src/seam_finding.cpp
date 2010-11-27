@@ -1,12 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
-
-#include <Imagen.h>
-#include <Magick++.h>
-#include <iostream> 
-
 #include <seam_finding.h>
 
 using namespace std; 

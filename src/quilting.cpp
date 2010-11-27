@@ -113,7 +113,6 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	
 	CoordenadasNuevasBi(LumTex, LumMargenV, LumMargenH, min_energia, rowBi, colBi);
 	
-	
      //Ahora ya podemos obtener Bi.
 	BiR.extrae(texR, rowBi, colBi);
 	BiG.extrae(texG, rowBi, colBi);
