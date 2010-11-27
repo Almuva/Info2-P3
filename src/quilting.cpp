@@ -29,7 +29,7 @@ void quilting(  Imagen & texR, Imagen & texG, Imagen & texB,
 	
 	col += increment;
 	
-	int cont = 0, max_iteraciones = 1; //Debugger
+	int cont = 0, max_iteraciones = 7; //Debugger
 	
      //El siguiente bucle va llenando IMout según los valores que va retornando la función Imagen::agrega(), en "result"
 	while(1)
@@ -129,8 +129,8 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 		marcaSegunSeamV(LumMargenVEscogido, BiR, BiG, BiB);
 	}
 	
-//	escribe((char*)"Bi_a_agregar.png", BiR, BiG, BiB);
-/*	
+	escribe((char*)"Bi_a_agregar.png", BiR, BiG, BiB);
+	
 	if(row!=0)
 	{
 		Imagen LumMargenHEscogido(margenH.fils(), margenH.cols());
@@ -141,7 +141,8 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 		
 		marcaSegunSeamH(LumMargenHEscogido, BiR, BiG, BiB);
 	}
-*/
+	
+	escribe((char*)"Bi_a_agregar.png", BiR, BiG, BiB);
 }
 
 //Aplica el significado de "energía" aplicado en la práctica y la retorna.
@@ -269,12 +270,14 @@ void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & B
 	
 	imprime_pant(LumMargenV);
 	
-/*	unsigned int col = 0;
+	unsigned int col;
 	
 	for(unsigned int row = 0; row < LumMargenV.fils(); row++)
 	{
+		col = 0;
 		while(LumMargenV(row, col) < 10E20) //10E20: valor fuera de rango.
 		{
+		std::cout<<"Marcando V seam: "<<row<<", "<<col<<std::endl;
 			BiR(row, col) = 10E20;
 			BiG(row, col) = 10E20;
 			BiB(row, col) = 10E20;
@@ -288,32 +291,35 @@ void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & B
 		
 		}
 	}
-*/
 }
-/*
+
 void marcaSegunSeamH(Imagen & LumMargenH, Imagen & BiR, Imagen & BiG, Imagen & BiB)
 {
      //Marcamos con valores fuera de rango el seam en la imagen LumMargenVEscogido
 	find_h_seam(LumMargenH);
 	
-	unsigned int row = 0;
+	imprime_pant(LumMargenH);
 	
-	for(unsigned int col = 0; col < LumMargenV.cols(); col++)
+	unsigned int row;
+	
+	for(unsigned int col = 0; col < LumMargenH.cols(); col++)
 	{
-		while(LumMargenV(row, col) < 10E20) //10E20: valor fuera de rango.
+		row = 0;
+		while(LumMargenH(row, col) < 10E20) //10E20: valor fuera de rango.
 		{
+		std::cout<<"Marcando H seam: "<<row<<", "<<col<<std::endl;
 			BiR(row, col) = 10E20;
 			BiG(row, col) = 10E20;
 			BiB(row, col) = 10E20;
 			row++;
-*/		/*	
-			if(row == LumMargenV.fils()) //Debugger
+			
+			if(row == LumMargenH.fils()) //Debugger
 			{
 				fprintf(stderr,"En ''marcaSegunSeamH()'' se pasa de largo!!!\n");
 				exit(1);
 			}
-		*/
-/*		}
+		
+		}
 	}
 }
-*/
+
