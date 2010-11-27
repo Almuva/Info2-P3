@@ -20,10 +20,10 @@ void quilting(  Imagen & texR, Imagen & texG, Imagen & texB,
 void escogeBiAleatorio( Imagen & BiR, Imagen & BiG, Imagen & BiB, 
 			Imagen & texR, Imagen & texG, Imagen & texB);
 
-void escogeSiguienteBi( Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB, 
-			Imagen & BiR, Imagen & BiG, Imagen & BiB, unsigned int tam_Bi,
-			Imagen & texR, Imagen & texG, Imagen & texB,  Imagen & LumTex,
-			unsigned int row, unsigned int col);
+void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
+			Imagen & texR, Imagen & texG, Imagen & texB, Imagen & LumTex,
+			unsigned int row, unsigned int col, 
+			unsigned int tam_Bi, Imagen & BiR, Imagen & BiG, Imagen & BiB);
 			
 double compara(const Imagen& A,const Imagen& B,Imagen& Result);
 
