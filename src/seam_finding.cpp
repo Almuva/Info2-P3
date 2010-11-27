@@ -59,7 +59,7 @@ unsigned int smallestH(Imagen &cumulativeE){
 // BACKTRACK
 void backtrackV(Imagen &cE, int i, unsigned int j, Imagen & E){
 
-//	cout<<"backtrackV: "<<i<<", "<<j<<endl;
+	cout<<"backtrackV: "<<i<<", "<<j<<endl;
 	if (i >= 0){
 		// Aj = incremento de j 
 		int Aj = minPosition(cE(i-1,j-1), cE(i-1,j), cE(i-1,j+1));
@@ -86,7 +86,7 @@ void find_v_seam(Imagen & E){
 		}
 	}
 	//escribe((char*)"acumuladas.jpg", e);
-	unsigned int col = smallestV(cE);
+	unsigned int col = smallestH(cE);
 	
 	E(cE.fils()-1, col) = 10E20;
 	backtrackV(cE, cE.fils()-1, col, E);
@@ -131,7 +131,7 @@ void find_h_seam(Imagen &E){
 	}
 	//e.recorta(0,255);
 	//escribe("acumuladasH.jpg", e);
-	unsigned int row = smallestH(cE);
+	unsigned int row = smallestV(cE);
 	
 	E(row, cE.cols()-1) = 10E20;
 	backtrackH(cE, row, cE.cols()-1, E);
