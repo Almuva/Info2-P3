@@ -29,13 +29,17 @@ void quilting(  Imagen & texR, Imagen & texG, Imagen & texB,
 	col += increment;
 	
 	
-	int cont = 0, max_iteraciones = 1; //Debugger
+	
+	
+	
+//	int cont = 0, max_iteraciones = 1; //Debugger
 	
 	while(1)
 	{
 		do
 		{
-			escogeSiguienteBi(IMoutR, IMoutG, IMoutB, BiR, BiG, BiB, tam_Bi, texR, texG, texB, LumTex, row, col); //Modifica Bi R,G,B
+			escogeBiAleatorio(BiR, BiG, BiB, texR, texG, texB);
+			//escogeSiguienteBi(IMoutR, IMoutG, IMoutB, BiR, BiG, BiB, tam_Bi, texR, texG, texB, LumTex, row, col); //Modifica Bi R,G,B
 		
 			result = IMoutR.agrega(BiR, row, col);
 			IMoutG.agrega(BiG, row, col);
@@ -45,7 +49,7 @@ void quilting(  Imagen & texR, Imagen & texG, Imagen & texB,
 			
 			std::cout<<"caso normal"<<std::endl;
 			
-			cont++; if(cont == max_iteraciones) result=2; //Debugger
+//			cont++; if(cont == max_iteraciones) result=2; //Debugger
 		}
 		while(result == 0); //0==caso normal
 		
@@ -105,7 +109,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	margenH.extrae(IMoutR, row, col); LumMargenH+=margenH;
 	
 	
-	imprime_pant(LumTex);
+	//imprime_pant(LumTex);
 	std::cout<<"\n\n\n\n\n\n"<<std::endl;
 	imprime_pant(LumMargenH);
 	
