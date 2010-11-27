@@ -28,7 +28,7 @@ void quilting(  Imagen & texR, Imagen & texG, Imagen & texB,
 	
 	col += increment;
 	
-	int cont = 0, max_iteraciones = 1; //Debugger
+//	int cont = 0, max_iteraciones = 1; //Debugger
 	
 	while(1)
 	{
@@ -45,7 +45,7 @@ void quilting(  Imagen & texR, Imagen & texG, Imagen & texB,
 			
 			std::cout<<"caso normal"<<std::endl;
 			
-			cont++; if(cont == max_iteraciones) result=2; //Debugger
+//			cont++; if(cont == max_iteraciones) result=2; //Debugger
 		}
 		while(result == 0); //0==caso normal
 		
@@ -114,7 +114,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
      //Segunda parte: a partir de la energía mínima obtenida, obtenemos las posiciones del inicio del nuevo Bi.
 	unsigned int rowBi=0, colBi=0;
 	
-//	CoordenadasNuevasBi(LumTex, LumMargenV, LumMargenH, min_energia, rowBi, colBi);
+	CoordenadasNuevasBi(LumTex, LumMargenV, LumMargenH, min_energia, rowBi, colBi);
 	
      //Ahora ya podemos obtener Bi.
 	BiR.extrae(texR, rowBi, colBi);
