@@ -196,12 +196,12 @@ bool Imagen::extrae(Imagen& I,unsigned int row,unsigned int col)
 {
 	if(I.fils()<dim[0]+row || I.cols()<dim[1]+col){return false;}//check: no se pueden pedir valores fuera de la imagen.
 	
-	unsigned int i=0;
+	unsigned int count=0;
 
-	for(unsigned int f=row;f<row+dim[0];f++)
-		for(unsigned int c=col;c<col+dim[1];c++)
+	for(unsigned int i=row; i<row+dim[0]; i++)
+		for(unsigned int j=col; j<col+dim[1]; j++)
 		{
-			datos[i]=I(f,c);i++;
+			datos[count]=I(i,j);count++;
 		}
 	return true;
 }
