@@ -1,6 +1,8 @@
 #include <quilting.h>
 
-void quilting(Imagen & texR, Imagen & texG, Imagen & texB, unsigned int tam_Bi, Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB)
+void quilting(  Imagen & texR, Imagen & texG, Imagen & texB, 
+		unsigned int tam_Bi, 
+		Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB)
 {
 	unsigned int row = 0;
 	unsigned int col = 0;
@@ -13,20 +15,27 @@ void quilting(Imagen & texR, Imagen & texG, Imagen & texB, unsigned int tam_Bi, 
 	Imagen BiG(tam_Bi+margenes, tam_Bi+margenes);
 	Imagen BiB(tam_Bi+margenes, tam_Bi+margenes);
 	
-	escogeBiAleatorio(IMoutR, BiR, BiG, BiB, texR, texG, texB);
+	//Creamos una imagen que contiene la suma de los componentes de color de la imagen de textura. De esta forma no hay que calcularlo cada vez.
+	Imagen LumTex(texR.fils(), texR.cols(), 0);
+	LumTex+=texR; LumTex+=texG; LumTex+=texB;
+	
+	//Llevamos a caso la primera inserción de Bi, la aleatoria.
+	escogeBiAleatorio(BiR, BiG, BiB, texR, texG, texB);
 	
 	IMoutR.agrega(BiR, row, col);
 	IMoutG.agrega(BiG, row, col);
 	IMoutB.agrega(BiB, row, col);
 	
-//	int cont = 0; //Debugger
+	col += increment;
+	
+	
+	int cont = 0, max_iteraciones = 1; //Debugger
 	
 	while(1)
 	{
 		do
 		{
-			escogeBiAleatorio(IMoutR, BiR, BiG, BiB, texR, texG, texB);
-			//escogeSiguienteBi(IMoutR, IMoutG, IMoutB, BiR, BiG, BiB, tam_Bi, texR, texG, texB, row, col); //Modifica Bi R,G,B
+			escogeSiguienteBi(IMoutR, IMoutG, IMoutB, BiR, BiG, BiB, tam_Bi, texR, texG, texB, LumTex, row, col); //Modifica Bi R,G,B
 		
 			result = IMoutR.agrega(BiR, row, col);
 			IMoutG.agrega(BiG, row, col);
@@ -36,7 +45,7 @@ void quilting(Imagen & texR, Imagen & texG, Imagen & texB, unsigned int tam_Bi, 
 			
 			std::cout<<"caso normal"<<std::endl;
 			
-//			cont++; if(cont == 2) result=2; //Debugger
+			cont++; if(cont == max_iteraciones) result=2; //Debugger
 		}
 		while(result == 0); //0==caso normal
 		
@@ -52,8 +61,7 @@ void quilting(Imagen & texR, Imagen & texG, Imagen & texB, unsigned int tam_Bi, 
 }
 
 //Modifica las variables Bi R,G,B con un Bi cualquiera dentro de tex
-void escogeBiAleatorio(Imagen & IMoutR, 
-			Imagen & BiR, Imagen & BiG, Imagen & BiB, 
+void escogeBiAleatorio(	Imagen & BiR, Imagen & BiG, Imagen & BiB, 
 			Imagen & texR, Imagen & texG, Imagen & texB)
 {
 	unsigned int rowBi, colBi, tam_Bi = BiR.fils(); //Recordamos: Bi es cuadrado (y en este momento las columnas son 0)
@@ -73,47 +81,54 @@ void escogeBiAleatorio(Imagen & IMoutR,
 
 //Modifica las variables Bi R,G,B segun el/los margen/es del último Bi añadido a Imout (posición de inicio: (row,col))
 //Atención!!: En este caso, el tamaño de BiR, BiG y BiB ya incluye los márgenes !!
-void escogeSiguienteBi(Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB, 
-		Imagen & BiR, Imagen & BiG, Imagen & BiB, unsigned int tam_Bi,
-		Imagen & texR, Imagen & texG, Imagen & texB,
-		unsigned int row, unsigned int col)
+void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB, 
+			Imagen & BiR, Imagen & BiG, Imagen & BiB, unsigned int tam_Bi,
+			Imagen & texR, Imagen & texG, Imagen & texB, Imagen & LumTex,
+			unsigned int row, unsigned int col)
 {
-     //Creamos una imagen que contiene la suma de los componentes de color de la imagen de textura. De esta forma no hay que calcularlo cada vez.
-	Imagen LumTex(texR.fils(), texR.cols(), 0.0);//%%% fuera de aquí!!
-	LumTex+=texR; LumTex+=texG; LumTex+=texB;//%%%(tb)
-	
-
      //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
 	Imagen LumMargenV(tam_Bi+tam_Bi/3, tam_Bi/6);
 	Imagen margenV(LumMargenV.fils(), LumMargenV.cols()); //auxiliar
 	
-	margenV.extrae(BiR, row, col); LumMargenV+=margenV;
-	margenV.extrae(BiG, row, col); LumMargenV+=margenV;
-	margenV.extrae(BiB, row, col); LumMargenV+=margenV;
+	margenV.extrae(IMoutR, row, col); LumMargenV+=margenV;
+	margenV.extrae(IMoutG, row, col); LumMargenV+=margenV;
+	margenV.extrae(IMoutB, row, col); LumMargenV+=margenV;
+	
+//	escribe((char*)"LumMargenV.png",LumMargenV);
 
      //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
 	Imagen LumMargenH(tam_Bi/6, tam_Bi+tam_Bi/3);
 	Imagen margenH(LumMargenH.fils(), LumMargenH.cols()); //auxiliar
 	
-	margenH.extrae(BiR, row, col); LumMargenH+=margenH;
-	margenH.extrae(BiG, row, col); LumMargenH+=margenH;
-	margenH.extrae(BiB, row, col); LumMargenH+=margenH;
+	margenH.extrae(IMoutR, row, col); LumMargenH+=margenH;
+	margenH.extrae(IMoutR, row, col); LumMargenH+=margenH;
+	margenH.extrae(IMoutR, row, col); LumMargenH+=margenH;
+	
+	
+	imprime_pant(LumTex);
+	std::cout<<"\n\n\n\n\n\n"<<std::endl;
+	imprime_pant(LumMargenH);
+	
+//	escribe((char*)"LumMargenH.png",LumMargenH);
+	
 	
      //Primera parte: Obtenemos la energía del margen (forma de L) que más se parece al actual.
-	double min_energia = EnergiaMinimaMargenes(LumTex, LumMargenV, LumMargenH);
+//	double min_energia = EnergiaMinimaMargenes(LumTex, LumMargenV, LumMargenH);
+	
+//	std::cout<<"La energía mínima es: "<<min_energia<<std::endl;
 	
      //Segunda parte: a partir de la energía mínima obtenida, obtenemos las posiciones del inicio del nuevo Bi.
-	unsigned int rowBi, colBi;
+	unsigned int rowBi=0, colBi=0;
 	
-	CoordenadasNuevasBi(LumTex, LumMargenV, LumMargenH, min_energia, rowBi, colBi);
+//	CoordenadasNuevasBi(LumTex, LumMargenV, LumMargenH, min_energia, rowBi, colBi);
 	
      //Ahora ya podemos obtener Bi.
-	BiR.extrae(IMoutR, rowBi, colBi);
-	BiG.extrae(IMoutG, rowBi, colBi);
-	BiB.extrae(IMoutB, rowBi, colBi);
+	BiR.extrae(texR, rowBi, colBi);
+	BiG.extrae(texG, rowBi, colBi);
+	BiB.extrae(texB, rowBi, colBi);
 }
 
-double compara(const Imagen& A,const Imagen& B)
+double compara(const Imagen& A,Imagen& B)
 {
 	if(A.dim[0]!=B.dim[0] || A.dim[1]!=B.dim[1])
 	{
@@ -121,10 +136,35 @@ double compara(const Imagen& A,const Imagen& B)
 	}
 	unsigned int M=A.dim[0]*A.dim[1];
 	double *a=A.datos,*b=B.datos,aux,totalEnerg=0;
+	
+	Imagen BB(B);
+	
+	
 	for(unsigned int i=0;i<M;i++)
 	{
+		std::cout<<"It. "<<i<<" de "<<M<<std::endl;
+		
+		
 		aux=a[i]-b[i];
 		totalEnerg+=aux*aux;
+
+		
+		
+		std::cout<<"Valores: "<<a[i]<<", "<<b[i]<<std::endl;
+		std::cout<<"a[i]-b[i] = "<<aux<<std::endl;
+		std::cout<<"ans^2 = "<<aux*aux<<std::endl;
+		std::cout<<"-->en..."<<totalEnerg<<"\n\n"<<std::endl;
+		
+		
+		if(i>=100){
+		char c;
+		scanf("%c\n", &c);
+		}
+		
+		
+		
+		BB.datos[i] = 0;
+		escribe((char*)"IM.png", BB);
 	}
 	return totalEnerg;
 }
@@ -157,22 +197,38 @@ double EnergiaMinimaMargenes(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumM
      	double valor; //Un auxiliar
      	unsigned int tam_BiMargenes = LumMargenV.fils();
      	
-	for(unsigned int i=0; i<=LumTex.fils()-tam_BiMargenes; i++) //%%% <= ??
+     	
+     	
+	escribe((char*)"comp1_a.png",LumMargenV);
+     	escribe((char*)"comp2_a.png",LumMargenH);
+     	Imagen temp(LumMargenV.fils(), LumMargenV.cols());
+     	
+     	
+	for(unsigned int i=0; i<=LumTex.fils()-tam_BiMargenes; i++)
 	{
-		for(unsigned int j=0; j<=LumTex.cols()-tam_BiMargenes; j++) //%%% <= ??
+		for(unsigned int j=0; j<=LumTex.cols()-tam_BiMargenes; j++)
 		{
+		std::cout<<"("<<i<<", "<<j<<")"<<std::endl;
 			margenV.extrae(LumTex, i, j);
 			//Se aplica la definición de energia de la práctica
-		//	margenV-=LumMargenV;
-		//	margenV*=margenV;
-		//	valor=margenV.sum();
-			valor = compara(LumMargenV, margenV);
+			valor = compara(LumMargenV, margenV, temp);
 			
-		//	margenH.extrae(LumTex, i, j);
-		//	margenH-=LumMargenH;
-		//	margenH*=margenH;
-		//	valor+=margenH.sum();
-			valor += compara(LumMargenH, margenH);
+			escribe((char*)"comp1_b.png",margenV);
+			std::cout<<"valor1: "<<valor<<std::endl;
+			
+			
+			
+			
+			margenH.extrae(LumTex, i, j);
+
+			valor = compara(LumMargenH, margenH);
+			
+			escribe((char*)"comp2_b.png",margenH);
+			std::cout<<"valor2: "<<valor<<std::endl;
+			
+			char r = 'n';
+			scanf("%c\n", &r);
+			
 			
 			if(valor < min_energia) min_energia = valor; //%%%Posible refactor: min_energia = min(valor, min_energia);
 		}
