@@ -111,10 +111,42 @@ void escogeSiguienteBi(Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	BiR.extrae(IMoutR, rowBi, colBi);
 	BiG.extrae(IMoutG, rowBi, colBi);
 	BiB.extrae(IMoutB, rowBi, colBi);
+}
+
+double compara(const Imagen& A,const Imagen& B)
+{
+	if(A.dim[0]!=B.dim[0] || A.dim[1]!=B.dim[1])
+	{
+		std::cout<<"FATAL ERROR Compara: diferents dimensions"<<std::endl;exit(1);
+	}
+	unsigned int M=A.dim[0]*A.dim[1];
+	double *a=A.datos,*b=B.datos,aux,totalEnerg=0;
+	for(unsigned int i=0;i<M;i++)
+	{
+		aux=a[i]-b[i];
+		totalEnerg+=aux*aux;
+	}
+	return totalEnerg;
+}
+
+double compara(const Imagen& A,const Imagen& B,Imagen& Result)
+{
+	if(A.dim[0]!=B.dim[0] || A.dim[1]!=B.dim[1])
+	{
+		std::cout<<"FATAL ERROR Compara: diferents dimensions"<<std::endl;exit(1);
+	}
+	unsigned int M=A.dim[0]*A.dim[1];
+	double *a=A.datos,*b=B.datos,*r=Result.datos,aux,totalEnerg=0;
+	for(unsigned int i=0;i<M;i++)
+	{
+		aux=a[i]-b[i];
+		aux*=aux;
+		r[i]=aux;
+		totalEnerg+=aux;
+	}
+	return totalEnerg;
 }	
 	
-	
-
 double EnergiaMinimaMargenes(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMargenH)
 {
 	Imagen margenV(LumMargenV.fils(), LumMargenV.cols()); //auxiliar
@@ -131,16 +163,16 @@ double EnergiaMinimaMargenes(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumM
 		{
 			margenV.extrae(LumTex, i, j);
 			//Se aplica la definición de energia de la práctica
-			margenV-=LumMargenV;
-			margenV*=margenV;
-			valor=margenV.sum();
-		//	valor = compara(LumMargenV, margenV);
+		//	margenV-=LumMargenV;
+		//	margenV*=margenV;
+		//	valor=margenV.sum();
+			valor = compara(LumMargenV, margenV);
 			
-			margenH.extrae(LumTex, i, j);
-			margenH-=LumMargenH;
-			margenH*=margenH;
-			valor+=margenH.sum();
-		//	valor += compara(LumMargenH, margenH);
+		//	margenH.extrae(LumTex, i, j);
+		//	margenH-=LumMargenH;
+		//	margenH*=margenH;
+		//	valor+=margenH.sum();
+			valor += compara(LumMargenH, margenH);
 			
 			if(valor < min_energia) min_energia = valor; //%%%Posible refactor: min_energia = min(valor, min_energia);
 		}
@@ -171,16 +203,16 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMarge
 		{
 			margenV.extrae(LumTex, i, j);
 			//Se aplica la definición de energia de la práctica
-			margenV-=LumMargenV;
-			margenV*=margenV;
-			valor=margenV.sum();
-		//	valor = compara(LumMargenV, margenV);
+		//	margenV-=LumMargenV;
+		//	margenV*=margenV;
+		//	valor=margenV.sum();
+			valor = compara(LumMargenV, margenV);
 			
 			margenH.extrae(LumTex, i, j);
-			margenH-=LumMargenH;
-			margenH*=margenH;
-			valor+=margenH.sum();
-		//	valor += compara(LumMargenH, margenH);
+		//	margenH-=LumMargenH;
+		//	margenH*=margenH;
+		//	valor+=margenH.sum();
+			valor += compara(LumMargenH, margenH);
 			
 			
 			if(  (valor <= min_energia+error) && (valor >= min_energia-error)  )

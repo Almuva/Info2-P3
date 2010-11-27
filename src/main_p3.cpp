@@ -67,26 +67,24 @@ int main(int argc,char **argv)
 	Imagen IMoutB(rows_IMout, cols_IMout, 0.0);
 	
 	
-
+//La función quilting() emprea el bucle principal de llenado de IMout con Bi's
 	quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
 
-/*	
-	Imagen BiR(tam_Bi, tam_Bi);
-	Imagen BiG(tam_Bi, tam_Bi);
-	Imagen BiB(tam_Bi, tam_Bi);
-	
-	for(unsigned int i=0;i<IMoutR.fils();i+=tam_Bi)
-		for(unsigned int j=0;j<IMoutR.cols();j+=tam_Bi)
-		{
-			escogeBiAleatorio(IMoutR, BiR, BiG, BiB, texR, texG, texB);
 
-			IMoutR.agrega(BiR,i,j);
-			IMoutG.agrega(BiG,i,j);
-			IMoutB.agrega(BiB,i,j);
-		}
-*/
 	cout<<"Creando nueva imagen"<<endl;
 	escribe(salida_char,IMoutR,IMoutG,IMoutB);
+	
+	
+//PRUEBA: Función comp()
+	Imagen texAll(texR.fils(), texR.cols()); texAll+=texR; texAll+=texG; texAll+=texB; 
+	Imagen comp(50,50) ,imgA(comp.fils(),comp.cols()),imgB(comp.fils(),comp.cols());
+	
+	imgA.extrae(texAll,0,0);
+	imgB.extrae(texAll,1,1);
+	
+	double en = compara(imgA,imgB,comp);
+	cout<<"Energia: "<<en<<endl;
+	escribe((char*)"compara.png",comp);
 
 	return 0;
 }

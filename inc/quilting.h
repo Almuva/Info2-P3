@@ -25,6 +25,10 @@ void escogeSiguienteBi( Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 			Imagen & BiR, Imagen & BiG, Imagen & BiB, unsigned int tam_Bi,
 			Imagen & texR, Imagen & texG, Imagen & texB,
 			unsigned int row, unsigned int col);
+			
+double compara(const Imagen& A,const Imagen& B,Imagen& Result);
+
+double compara(const Imagen& A,const Imagen& B);
 
 double EnergiaMinimaMargenes(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMargenH);
 
