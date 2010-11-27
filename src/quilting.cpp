@@ -29,7 +29,7 @@ void quilting(  Imagen & texR, Imagen & texG, Imagen & texB,
 	
 	col += increment;
 	
-//	int cont = 0, max_iteraciones = 1; //Debugger
+	int cont = 0, max_iteraciones = 1; //Debugger
 	
      //El siguiente bucle va llenando IMout según los valores que va retornando la función Imagen::agrega(), en "result"
 	while(1)
@@ -47,7 +47,7 @@ void quilting(  Imagen & texR, Imagen & texG, Imagen & texB,
 			
 			std::cout<<"caso normal"<<std::endl;
 			
-//			cont++; if(cont == max_iteraciones) result=2; //Debugger
+			cont++; if(cont == max_iteraciones) result=2; //Debugger
 		}
 		while(result == 0); //0==caso normal
 		
@@ -117,6 +117,31 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	BiR.extrae(texR, rowBi, colBi);
 	BiG.extrae(texG, rowBi, colBi);
 	BiB.extrae(texB, rowBi, colBi);
+	
+	if(col!=0)
+	{
+		Imagen LumMargenVEscogido(margenV.fils(), margenV.cols());
+		margenV.extrae(LumTex, rowBi, colBi);
+		
+		//Esta vez obtenemos la imagen resultante del cálculo de energías.
+		compara(LumMargenV, margenV, LumMargenVEscogido);
+		
+		marcaSegunSeamV(LumMargenVEscogido, BiR, BiG, BiB);
+	}
+	
+//	escribe((char*)"Bi_a_agregar.png", BiR, BiG, BiB);
+/*	
+	if(row!=0)
+	{
+		Imagen LumMargenHEscogido(margenH.fils(), margenH.cols());
+		margenH.extrae(LumTex, rowBi, colBi);
+		
+		//Esta vez obtenemos la imagen resultante del cálculo de energías.
+		compara(LumMargenH, margenH, LumMargenHEscogido);
+		
+		marcaSegunSeamH(LumMargenHEscogido, BiR, BiG, BiB);
+	}
+*/
 }
 
 //Aplica el significado de "energía" aplicado en la práctica y la retorna.
@@ -237,3 +262,58 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMarge
 	colBi = p.second;		
 }
 
+void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & BiB)
+{
+     //Marcamos con valores fuera de rango el seam en la imagen LumMargenVEscogido
+	find_v_seam(LumMargenV);
+	
+	imprime_pant(LumMargenV);
+	
+/*	unsigned int col = 0;
+	
+	for(unsigned int row = 0; row < LumMargenV.fils(); row++)
+	{
+		while(LumMargenV(row, col) < 10E20) //10E20: valor fuera de rango.
+		{
+			BiR(row, col) = 10E20;
+			BiG(row, col) = 10E20;
+			BiB(row, col) = 10E20;
+			col++;
+			
+			if(col == LumMargenV.cols()) //Debugger
+			{
+				fprintf(stderr,"En ''marcaSegunSeamV()'' se pasa de largo!!!\n");
+				exit(1);
+			}
+		
+		}
+	}
+*/
+}
+/*
+void marcaSegunSeamH(Imagen & LumMargenH, Imagen & BiR, Imagen & BiG, Imagen & BiB)
+{
+     //Marcamos con valores fuera de rango el seam en la imagen LumMargenVEscogido
+	find_h_seam(LumMargenH);
+	
+	unsigned int row = 0;
+	
+	for(unsigned int col = 0; col < LumMargenV.cols(); col++)
+	{
+		while(LumMargenV(row, col) < 10E20) //10E20: valor fuera de rango.
+		{
+			BiR(row, col) = 10E20;
+			BiG(row, col) = 10E20;
+			BiB(row, col) = 10E20;
+			row++;
+*/		/*	
+			if(row == LumMargenV.fils()) //Debugger
+			{
+				fprintf(stderr,"En ''marcaSegunSeamH()'' se pasa de largo!!!\n");
+				exit(1);
+			}
+		*/
+/*		}
+	}
+}
+*/

@@ -228,10 +228,10 @@ int Imagen::agrega(Imagen & im, unsigned int row, unsigned int col)
 	unsigned int row_end = row + im.fils()-1;
 	unsigned int col_end = col + im.cols()-1;
 	
-	//Si im se sale de la Imagen hay que modificar los finales y...
+	//Si im se sale de la Imagen (por la derecha)...
 	if(col_end > dim[1])
 	{
-	//...hay que asignar un salto en im.
+	//...hay que modificar los finales y que asignar un salto en im.
 		jump_cols = col_end - dim[1]+1;
 		col_end = dim[1]-1;
 		retorno = 1;
@@ -249,7 +249,8 @@ int Imagen::agrega(Imagen & im, unsigned int row, unsigned int col)
 	{
 		for(unsigned int j = col; j<=col_end; j++)
 		{
-			datos[i*dim[1]+j] = im.datos[index_im];
+			//10E20 es el numero que usamos para marcar el trozo de Bi que no se debe meter en la imagen de salida.
+			if(im.datos[index_im] != 10E20) datos[i*dim[1]+j] = im.datos[index_im];
 			index_im++;
 		}
 		index_im+=jump_cols;

@@ -11,7 +11,8 @@
 #include <vector>
 #include <utility>
 
-#include <Imagen.h>
+#include "Imagen.h"
+#include "seam_finding.h"
 
 void quilting(  Imagen & texR, Imagen & texG, Imagen & texB, 
 		unsigned int tam_Bi, 
@@ -34,5 +35,7 @@ double EnergiaMinimaMargenes(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumM
 void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMargenH,
 			 double min_energia, 
 			 unsigned int & rowBi, unsigned int & colBi);
+
+void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & BiB);
 
 #endif
