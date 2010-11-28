@@ -1,6 +1,6 @@
 #include <quilting.h>
 
-void quilting(  Imagen & texR, Imagen & texG, Imagen & texB, 
+void quilting( Imagen & texR, Imagen & texG, Imagen & texB, 
 		unsigned int tam_Bi, 
 		Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB)
 {
@@ -15,12 +15,12 @@ void quilting(  Imagen & texR, Imagen & texG, Imagen & texB,
 	Imagen BiG(tam_Bi+margenes, tam_Bi+margenes);
 	Imagen BiB(tam_Bi+margenes, tam_Bi+margenes);
 	
-     //Creamos una imagen que contiene la suma de los componentes de color de la imagen de textura. De esta forma no hay que calcularlo cada vez.
+	 //Creamos una imagen que contiene la suma de los componentes de color de la imagen de textura. De esta forma no hay que calcularlo cada vez.
 	Imagen LumTex(texR.fils(), texR.cols(), 0);
 	LumTex+=texR; LumTex+=texG; LumTex+=texB;
 	
 	
-     //Llevamos a caso la primera inserción de Bi, la aleatoria.
+	 //Llevamos a caso la primera inserción de Bi, la aleatoria.
 	escogeBiAleatorio(BiR, BiG, BiB, texR, texG, texB);
 	
 	IMoutR.agrega(BiR, row, col);
@@ -31,7 +31,7 @@ void quilting(  Imagen & texR, Imagen & texG, Imagen & texB,
 	
 	int cont = 0, max_iteraciones = 7; //Debugger
 	
-     //El siguiente bucle va llenando IMout según los valores que va retornando la función Imagen::agrega(), en "result"
+	 //El siguiente bucle va llenando IMout según los valores que va retornando la función Imagen::agrega(), en "result"
 	while(1)
 	{
 		do //en el main nos aseguramos que Bi+margenes sea mayor estricto que tex. Esta primera iteración siempre se hará.
@@ -88,7 +88,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 			unsigned int row, unsigned int col, 
 			unsigned int tam_Bi, Imagen & BiR, Imagen & BiG, Imagen & BiB)
 {
-     //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
+	 //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
 	Imagen LumMargenV(tam_Bi+tam_Bi/3, tam_Bi/6, 0);
 	Imagen margenV(LumMargenV.fils(), LumMargenV.cols()); //auxiliar
 	
@@ -96,7 +96,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	margenV.extrae(IMoutG, row, col); LumMargenV+=margenV;
 	margenV.extrae(IMoutB, row, col); LumMargenV+=margenV;
 
-     //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
+	 //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
 	Imagen LumMargenH(tam_Bi/6, tam_Bi+tam_Bi/3, 0);
 	Imagen margenH(LumMargenH.fils(), LumMargenH.cols()); //auxiliar
 	
@@ -105,17 +105,17 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	margenH.extrae(IMoutB, row, col); LumMargenH+=margenH;
 	
 	
-     //Primera parte: Obtenemos la energía del margen (forma de L) que más se parece al actual.
+	 //Primera parte: Obtenemos la energía del margen (forma de L) que más se parece al actual.
 	//double min_energia = EnergiaMinimaMargenes(LumTex, LumMargenV, LumMargenH);/*refactored*/
 	vector<pair<double,pair<unsigned,unsigned> > >energias;
-	energias = EnergiaMinimaMargenes(LumTex, LumMargenV, LumMargenH);
+	EnergiaMinimaMargenes(LumTex, LumMargenV, LumMargenH, energias);
 	
-     //Segunda parte: a partir de la energía mínima obtenida, obtenemos las posiciones del inicio del nuevo Bi.
+	 //Segunda parte: a partir de la energía mínima obtenida, obtenemos las posiciones del inicio del nuevo Bi.
 	unsigned int rowBi=0, colBi=0;
 	
 	CoordenadasNuevasBi(LumTex, LumMargenV, LumMargenH, energias, rowBi, colBi);
 	
-     //Ahora ya podemos obtener Bi.
+	 //Ahora ya podemos obtener Bi.
 	BiR.extrae(texR, rowBi, colBi);
 	BiG.extrae(texG, rowBi, colBi);
 	BiB.extrae(texB, rowBi, colBi);
@@ -187,21 +187,24 @@ double compara(const Imagen& A,const Imagen& B,Imagen& Result)
 
 //Busca todos los márgenes en forma de L (dividido en dos márgenes, a su vez) en la textura y...
 //...retorna la energía del margen L que mejor se adapta a LumMargenV y LumMargenH.
-vector<pair<double,pair<unsigned,unsigned> > > EnergiaMinimaMargenes(Imagen & LumTex,
-	Imagen & LumMargenV, Imagen & LumMargenH)
+double EnergiaMinimaMargenes(Imagen & LumTex,Imagen & LumMargenV,Imagen & LumMargenH,
+	vector<pair<double,pair<unsigned,unsigned> > >& energias)
 {
 	Imagen margenV(LumMargenV.fils(), LumMargenV.cols()); //auxiliar
 	Imagen margenH(LumMargenH.fils(), LumMargenH.cols()); //auxiliar
 	
-     //A continuación se buscarán los valores para la energía mínima para los márgenes
-     	//double min_energia = 1000000;/*refactored ! unused*/
-     	vector<pair<double,pair<unsigned,unsigned> > >energias;
-     	double valor; //Un auxiliar
-     	unsigned int tam_BiMargenes = LumMargenV.fils();
-     	
-	for(unsigned int i=0; i<=LumTex.fils()-tam_BiMargenes; i++)
-	{
-		for(unsigned int j=0; j<=LumTex.cols()-tam_BiMargenes; j++)
+	//A continuación se buscarán los valores para la energía mínima para los márgenes
+	//double min_energia = 1000000;/*refactored ! unused*/
+		energias.reserve(LumTex.fils()*LumTex.cols());
+	
+		double valor; //Un auxiliar
+		unsigned int tam_BiMargenes = LumMargenV.fils();
+	 	
+	//precalculo
+	const unsigned int MaxFils=LumTex.fils()-tam_BiMargenes,MaxCols=LumTex.cols()-tam_BiMargenes;
+
+	for(unsigned int i=0; i<=MaxFils; i++)
+		for(unsigned int j=0; j<=MaxCols; j++)
 		{
 			//Obtenemos el margen correspondiente a la iteración
 			margenV.extrae(LumTex, i, j);
@@ -213,13 +216,11 @@ vector<pair<double,pair<unsigned,unsigned> > > EnergiaMinimaMargenes(Imagen & Lu
 			
 			//Si la energía obtenida es menor a la que guardamos, guardamos ésa.
 			//min_energia = min(valor, min_energia);/*refactored*/
-			pair<unsigned,unsigned> coord (i,j);
-			pair<double,pair<unsigned,unsigned> > energia (valor,coord);
+			pair<double,pair<unsigned,unsigned> > energia (valor,pair<unsigned,unsigned>(i,j));
 			energias.push_back(energia);
 		}
-	}
 	sort(energias.begin(),energias.end());
-	return energias;
+	return energias[0].first;
 }
 	
 //A partir de min_energia calcula un margen de error y retorna aletoriamente la posición de...
@@ -244,7 +245,7 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMarge
 	rowBi = triat.first;
 	colBi = triat.second;
 
-     //Ahora que disponemos del rango de energias que aceptaremos (min_energia+-error), guardamos en una lista las posiciones de los márgenes aceptables. /*refactored*/
+	 //Ahora que disponemos del rango de energias que aceptaremos (min_energia+-error), guardamos en una lista las posiciones de los márgenes aceptables. /*refactored*/
 	/*std::pair<unsigned int,unsigned int> p;
 	std::vector< std::pair<unsigned int,unsigned int> > coordenadas;
 	
@@ -263,7 +264,7 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMarge
 			valor += compara(LumMargenH, margenH);
 			
 			//Si el valor de energía es aceptable añadimos las coordenadas al vector de pairs.
-			if(  (valor <= min_energia+error) && (valor >= min_energia-error)  )
+			if( (valor <= min_energia+error) && (valor >= min_energia-error) )
 			{
 				p.first = i;
 				p.second = j;
@@ -278,14 +279,14 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMarge
 	else
 		p = coordenadas.at(rand() % coordenadas.size());
 
-	//(rowBi y colBi se modifican por parámetro)		    
+	//(rowBi y colBi se modifican por parámetro)			
 	rowBi = p.first;
 	colBi = p.second;*/		
 }
 
 void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & BiB)
 {
-     //Marcamos con valores fuera de rango el seam en la imagen LumMargenVEscogido
+	 //Marcamos con valores fuera de rango el seam en la imagen LumMargenVEscogido
 	find_v_seam(LumMargenV);
 	
 	//imprime_pant(LumMargenV);
@@ -315,7 +316,7 @@ void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & B
 
 void marcaSegunSeamH(Imagen & LumMargenH, Imagen & BiR, Imagen & BiG, Imagen & BiB)
 {
-     //Marcamos con valores fuera de rango el seam en la imagen LumMargenVEscogido
+	 //Marcamos con valores fuera de rango el seam en la imagen LumMargenVEscogido
 	find_h_seam(LumMargenH);
 	
 	//imprime_pant(LumMargenH);

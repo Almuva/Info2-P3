@@ -32,8 +32,8 @@ double compara(const Imagen& A,const Imagen& B,Imagen& Result);
 
 double compara(const Imagen& A,const Imagen& B);
 
-vector<pair<double,pair<unsigned,unsigned> > > EnergiaMinimaMargenes(Imagen & LumTex,
-	Imagen & LumMargenV, Imagen & LumMargenH);
+double EnergiaMinimaMargenes(Imagen & LumTex,Imagen & LumMargenV, Imagen & LumMargenH,
+	vector<pair<double,pair<unsigned,unsigned> > >& energias);
 
 void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMargenH,
 	vector<pair<double,pair<unsigned,unsigned> > >& energias, 
