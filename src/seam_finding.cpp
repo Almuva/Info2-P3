@@ -1,12 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
-
-#include <Imagen.h>
-#include <Magick++.h>
-#include <iostream> 
-
 #include <seam_finding.h>
 
 using namespace std; 
@@ -66,43 +57,45 @@ unsigned int smallestH(Imagen &cumulativeE){
 }
 
 // BACKTRACK
-void backtrackV(Imagen &cE, int i, unsigned int j){
+void backtrackV(Imagen &cE, int i, unsigned int j, Imagen & E){
 
-	//cout<<"bt"<<i<<endl;
+	cout<<"backtrackV: "<<i<<", "<<j<<endl;
 	if (i >= 0){
 		// Aj = incremento de j 
 		int Aj = minPosition(cE(i-1,j-1), cE(i-1,j), cE(i-1,j+1));
 		int f = i-1;
 		unsigned int c = j + Aj;
-		backtrackV(cE, f, c);
-		cE(f, c) = 10E20;
+		backtrackV(cE, f, c, E);
+		E(f, c) = 10E20;
 	}	
 }
 
 // @ seams: seam de posicions de menor energia
 // @ energies: e(HoG)
-void find_v_seam(Imagen &e){
+void find_v_seam(Imagen & E){
 	
-	//Imagen cumulativeE(e.fils(), e.cols()); //matriz de valores minimos acumulados
-	// copy first row of energies
-	//done!
+	Imagen cE(E); //matriz de valores minimos acumulados
 
 	// the first step is to traverse the image from the second row to the last row and 
 	//compute the CUMULATIVE MINIMUM ENERGY M for all possible connected seams for each entry (i, j)
-	for (unsigned int i=1; i<e.fils(); i++){
-		for (unsigned int j=0; j<e.cols(); j++){
+	for (unsigned int i=1; i<cE.fils(); i++){
+		for (unsigned int j=0; j<cE.cols(); j++){
 			
-			double suma =  e(i,j) + menor(e(i-1,j-1), e(i-1,j), e(i-1,j+1));
-			e(i,j) = suma;
+			double suma =  cE(i,j) + menor(cE(i-1,j-1), cE(i-1,j), cE(i-1,j+1));
+			cE(i,j) = suma;
 		}
 	}
-	//escribe("acumuladas.jpg", e);
+	//escribe((char*)"acumuladas.jpg", e);
+	unsigned int col = smallestH(cE);
+	
+	E(cE.fils()-1, col) = 10E20;
+	backtrackV(cE, cE.fils()-1, col, E);
 }
 
 ///////////////////////////////////////////////////////////////////////
 
 // BACKTRACK
-void backtrackH(Imagen &cE, int i, unsigned int j){
+void backtrackH(Imagen &cE, int i, unsigned int j, Imagen & E){
 
 	//cout<<"bt"<<i<<endl;
 	if (i >= 0){
@@ -113,30 +106,34 @@ void backtrackH(Imagen &cE, int i, unsigned int j){
 		int Aj = minPosition(cE(j-1,c), cE(j,c), cE(j+1,c));
 	//	cout<<Aj<<endl;
 		unsigned int f = j + Aj;
-		backtrackH(cE, c, f);
-		cE(f, c) = 10E20;
+		backtrackH(cE, c, f, E);
+		E(f, c) = 10E20;
 	}	
 }
 
 // @ seams: seam de posicions de menor energia
 // @ energies: e(HoG)
-void find_h_seam(Imagen &e){
+void find_h_seam(Imagen &E){
 	
-	//Imagen cumulativeE(e.fils(), e.cols()); //matriz de valores minimos acumulados
+	Imagen cE(E); //matriz de valores minimos acumulados
 	// copy first row of energies
 	// done!
 
 	// the first step is to traverse the image from the second row to the last row and 
 	//compute the CUMULATIVE MINIMUM ENERGY M for all possible connected seams for each entry (i, j)
-	for (unsigned int j=1; j<e.cols(); j++){
-		for (unsigned int i=0; i<e.fils(); i++){
+	for (unsigned int j=1; j<cE.cols(); j++){
+		for (unsigned int i=0; i<cE.fils(); i++){
 				
-			double suma =  e(i,j) + menor(e(i-1,j-1), e(i,j-1), e(i+1,j-1));
+			double suma =  cE(i,j) + menor(cE(i-1,j-1), cE(i,j-1), cE(i+1,j-1));
 			//cout<<e(i,j)<<"-"<<menor(e(i-1,j-1), e(i-1,j), e(i-1,j+1))<<">"<< suma <<endl;
-			e(i,j) = suma;
+			cE(i,j) = suma;
 		}
 	}
 	//e.recorta(0,255);
 	//escribe("acumuladasH.jpg", e);
+	unsigned int row = smallestV(cE);
+	
+	E(row, cE.cols()-1) = 10E20;
+	backtrackH(cE, row, cE.cols()-1, E);
 }
 

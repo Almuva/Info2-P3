@@ -25,13 +25,13 @@ void uso()
 void casos_error(Imagen & texR, unsigned int tam_Bi, unsigned int rows_IMout, unsigned int cols_IMout)
 {
 	//Al tamaño de Bi le sumamos el margen (1/6 de la dimensión)
-	if( tam_Bi+2*tam_Bi/6 > texR.fils() || tam_Bi+2*tam_Bi/6 > texR.cols() )
+	if( tam_Bi+tam_Bi/3 > texR.fils() || tam_Bi+tam_Bi/3 > texR.cols() )
 	{
 		fprintf(stderr, "ERROR: Bi+margenes(1/6 de Bi) debe caber dentro de la imagen de entrada!! \n");
 		exit(1);
 	}
 	
-	if( rows_IMout < texR.fils() || cols_IMout < texR.cols() )
+	if( rows_IMout <= texR.fils() || cols_IMout <= texR.cols() )
 	{
 		fprintf(stderr, "ERROR: La imagen de salida debe ser más grande que la de entrada!! \n");
 		exit(1);
@@ -63,119 +63,33 @@ int main(int argc,char **argv)
 	casos_error(texR, tam_Bi, rows_IMout, cols_IMout);
 
 //se crea cada componente de la imagen de salida, todo a cero
-	Imagen IMoutR(rows_IMout, cols_IMout, 0.0);
-	Imagen IMoutG(rows_IMout, cols_IMout, 0.0);
-	Imagen IMoutB(rows_IMout, cols_IMout, 0.0);
+	Imagen IMoutR(rows_IMout, cols_IMout, 0);
+	Imagen IMoutG(rows_IMout, cols_IMout, 0);
+	Imagen IMoutB(rows_IMout, cols_IMout, 0);
+	
+	
+//La función quilting() emprea el bucle principal de llenado de IMout con Bi's
+	quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
 
-	//quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
-
+//Escribimos el resultado
+	cout<<"Creando nueva imagen"<<endl;
+	escribe(salida_char,IMoutR,IMoutG,IMoutB);
 	
 /*
-	while( (rows_out != 0) || (cols_out != 0) )
-	{
-		cout<<"Calculando iteración "<< it <<" de "<< total_it <<endl;
-		
-		// F.E.O.
-		crea_energias(uR,E);
-		crea_energias(uG,E);
-		crea_energias(uB,E);
-		E*=1/3.0;
-
-		if(rows_out >= 0 && cols_out >= 0)
-		{
-			// cout<<"x"<<endl;
-			//cout<<"filas >= 0 && columnas >= 0 no implementado"<<endl;
-			if (rows_out)
-			{
-				//cout<<"x1"<<endl;
-				int r = rows_out;
-				find_h_seam(E);
-				while(rows_out)
-				{
-			//cout<<"xa:"<<rows_out<<endl;
-					int i= smallestV(E);
-					E(i, E.cols()-1)=10E20;
-					backtrackH(E, E.cols()-1, i);
-			//cout<<"xb:"<<rows_out<<endl;
-					rows_out--;	
-				}
-				//cout<<"x2"<<endl;
-				rowsIn(E,r);
-				
-				E.resize_erase(E.fils()+r, E.cols());
-			}
-				if(cols_out)
-				{
-					find_v_seam(E,E);
-					columnOut(E,1);
-
-					Ec.resize_erase(Ec.fils(), Ec.cols()+1);
-					E.resize_erase(E.fils(), E.cols()+1);
-					cols_out--;
-				}
-				
-			
-			//exit(1);
-		}
-		else if(rows_out <= 0 && cols_out <= 0)
-		{
-			if(rows_out != 0)
-			{
-				find_h_seam(E);
-				// At the end of this process, the minimum value of the last row in M will indicate the end of the minimal connected vertical seam.// Hence, in the second step we BACKTRACK from this minimum entry on M to find the path of the optimal seam
-				E(smallestV(E), E.cols()-1) = 10E20;
-				backtrackH(E, E.cols()-1, smallestV(E));
-				rowOut(E,-1);
-
-				E.resize_erase(E.fils()-1, E.cols());
-				rows_out++;				
-			}
-			else if(cols_out != 0)
-			{
-				find_v_seam(E);
-				// At the end of this process, the minimum value of the last row in M will indicate the end of the minimal connected vertical seam.// Hence, in the second step we BACKTRACK from this minimum entry on M to find the path of the optimal seam
-				E(E.fils()-1, smallestH(E)) = 10E20;
-				backtrackV(E, E.fils()-1, smallestH(E));
-				columnOut(E,-1);
-
-				
-				E.resize_erase(E.fils(), E.cols()-1);
-				cols_out++;
-			}
-		}
-		else if(rows_out >= 0 && cols_out <= 0)
-		{
-			cout<<"filas >= 0 && columnas <= 0 no implementado"<<endl;
-			exit(1);
-		}
-		else if(rows_out <= 0 && cols_out >= 0)
-		{
-			cout<<"filas <= 0 && columnas >= 0 no implementado"<<endl;
-			exit(1);
-		}
-
-		it++;
-	}
+//PRUEBA: Función comp()
+	Imagen texAll(texR.fils(), texR.cols()); texAll+=texR; texAll+=texG; texAll+=texB; 
+	Imagen comp(50,50) ,imgA(comp.fils(),comp.cols(), 0),imgB(comp.fils(),comp.cols());
+	
+	//imgA.extrae(texAll,0,0);
+	imgB.extrae(texAll,1,1);
+	
+	double enx = compara(imgA,imgB);
+	cout<<"EnergiaX: "<<enx<<endl;
+	
+	double en = compara(imgA,imgB,comp);
+	cout<<"Energia: "<<en<<endl;
+	escribe((char*)"compara.png",comp);
 */
-	Imagen extret(tam_Bi,tam_Bi);
-
-	cout<<"Creando nueva imagen"<<endl;
-
-	unsigned int v,h,V=texR.fils()-extret.fils(),H=texR.cols()-extret.cols();
-	for(unsigned int i=0;i<IMoutR.fils();i+=extret.fils())
-		for(unsigned int j=0;j<IMoutR.cols();j+=extret.cols())
-		{
-			v=rand()%V;h=rand()%H;
-
-			extret.extrae(texR,v,h);
-			IMoutR.agrega(extret,i,j);
-			extret.extrae(texG,v,h);
-			IMoutG.agrega(extret,i,j);
-			extret.extrae(texB,v,h);
-			IMoutB.agrega(extret,i,j);
-		}
-
-	escribe(salida_char,IMoutR,IMoutG,IMoutB);
 
 	return 0;
 }

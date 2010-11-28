@@ -167,18 +167,38 @@ float Imagen::maxval()
 	return m;
 }
 
+//Se llama igual y hace lo mismo que la función de octave
+double Imagen::sum()
+{
+	double suma = 0.0;
+	unsigned int largo=dim[0]*dim[1];
+	for(unsigned int i=0; i<largo; i++)
+		suma+=datos[i];
+
+	return suma;
+}
+
 void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 {
 	delete[] datos;
 	dim[0] = rows;
 	dim[1] = cols;
-	datos=new double[dim[0]*dim[1]];
+
+	unsigned int largo = dim[0]*dim[1];
+	datos=new double[largo];
+	for(unsigned int i=0; i<largo;i++)
+		datos[i]=0.0;
 }
 
-bool Imagen::extrae(Imagen& I,unsigned int F,unsigned int C)
+//Extrae (copia) de I una imagen, del tamaño (f, c), del tamaño de this y la asigna.
+//Retorna true si es posible i false sino
+void Imagen::extrae(Imagen& I,unsigned int row,unsigned int col)
 {
 	unsigned int fils=dim[0]+F,cols=dim[1]+C,i=0;
-	if(I.fils()<fils || I.cols()<cols){return false;}//check
+	if(I.fils()<fils || I.cols()<cols)	//check: no se pueden pedir valores fuera de la imagen.
+	{
+		fprintf(stderr,"ERROR: (extrae) Intenta extraer fuera de la imagen !\n");exit(1);
+	}
 
 	for(unsigned int f=F;f<fils;f++)
 		for(unsigned int c=C;c<cols;c++)
@@ -189,9 +209,19 @@ bool Imagen::extrae(Imagen& I,unsigned int F,unsigned int C)
 	return true;
 }
 
+//Mete en this una imagen más pequeña, im, partiendo de la posición row, col
+//Valores de return: 1 si metiendo im se llega al lateral de this.
+//			2 si metiendo im se llega a la esquina inferior derecha de this.
+//			0 si se mete y no ocurre lo anterior
 int Imagen::agrega(Imagen & im, unsigned int row, unsigned int col)
 {
-	if(  (row > dim[0]-1) || (col > dim[1]-1)  ) return 1;
+	if(  (row > dim[0]-1) || (col > dim[1]-1)  )
+	{
+		fprintf(stderr,"En ''Imagen::agrega(...)'' se lee fuera de rango!!!\n");
+		exit(1);
+	}
+	
+	unsigned int retorno = 0;
 
 	unsigned int index_im = 0; //Para ir leyando im
 	
@@ -201,17 +231,20 @@ int Imagen::agrega(Imagen & im, unsigned int row, unsigned int col)
 	unsigned int row_end = row + im.fils()-1;
 	unsigned int col_end = col + im.cols()-1;
 	
-	//Si im se sale de la Imagen hay que modificar los finales y...
+	//Si im se sale de la Imagen (por la derecha)...
+	if(col_end > dim[1])
+	{
+	//...hay que modificar los finales y que asignar un salto en im.
+		jump_cols = col_end - dim[1]+1;
+		col_end = dim[1]-1;
+		retorno = 1;
+	}
+	
 	if(row_end > dim[0])
 	{
 		row_end = dim[0]-1;
-	}
-	
-	if(col_end > dim[1])
-	{
-	//...hay que asignar un salto en im.
-		jump_cols = col_end - dim[1]+1;
-		col_end = dim[1]-1;
+		
+		if(retorno == 1) retorno = 2;
 	}
 	
 	//bucle de copia
@@ -219,13 +252,16 @@ int Imagen::agrega(Imagen & im, unsigned int row, unsigned int col)
 	{
 		for(unsigned int j = col; j<=col_end; j++)
 		{
-			datos[i*dim[1]+j] = im.datos[index_im];
+			//10E20 es el numero que usamos para marcar el trozo de Bi que no se debe meter en la imagen de salida.
+			if(im.datos[index_im] != 10E20) datos[i*dim[1]+j] = im.datos[index_im];
 			index_im++;
 		}
 		index_im+=jump_cols;
 	}
 	
-	return 0;
+//	std::cout<<"retorno: "<<retorno<<std::endl;
+	
+	return retorno;
 }
 
 
