@@ -7,7 +7,7 @@ void quilting(  Imagen & texR, Imagen & texG, Imagen & texB,
 	unsigned int row = 0;
 	unsigned int col = 0;
 	int result = -1;
-	
+
 	unsigned int margenes = tam_Bi/3; //2*tam_Bi/6 == tam_Bi/3 == Bi+dos margenes
 	unsigned int increment = tam_Bi + tam_Bi/6; //Bi+un margen
 	
@@ -254,9 +254,12 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMarge
 			}
 		}
 	}
-	
-     //Ya casi estamos. Ahora hay que escoger una posición (pair) de las que hay en el vector, aleatoriamente.
-	p = coordenadas.at(rand() % coordenadas.size());
+
+	//Ya casi estamos. Ahora hay que escoger una posición (pair) de las que hay en el vector, aleatoriamente.
+	if(coordenadas.size()==0)
+		std::cout<<"CoordenadasNuevasBi: no hay margenes aceptables!"<<std::endl;
+	else
+		p = coordenadas.at(rand() % coordenadas.size());
 	
 	//(rowBi y colBi se modifican por parámetro)		    
 	rowBi = p.first;
