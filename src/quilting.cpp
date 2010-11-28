@@ -45,7 +45,7 @@ void quilting(  Imagen & texR, Imagen & texG, Imagen & texB,
 			
 			col += increment;
 			
-			std::cout<<"caso normal"<<std::endl;
+			//std::cout<<"caso normal"<<std::endl;
 			
 			cont++; if(cont == max_iteraciones) result=2; //Debugger
 		}
@@ -56,9 +56,9 @@ void quilting(  Imagen & texR, Imagen & texG, Imagen & texB,
 			col = 0;
 			row += increment;
 			
-			std::cout<<"borde!!!"<<std::endl;
+			//std::cout<<"borde!!!"<<std::endl;
 		}
-		else if(result == 2){std::cout<<"esquina!!!!!!!!!"<<std::endl; break;} //2==se llega al final de la última fila
+		else if(result == 2){/*std::cout<<"esquina!!!!!!!!!"<<std::endl;*/ break;} //2==se llega al final de la última fila
 	}
 }
 
@@ -106,12 +106,14 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	
 	
      //Primera parte: Obtenemos la energía del margen (forma de L) que más se parece al actual.
-	double min_energia = EnergiaMinimaMargenes(LumTex, LumMargenV, LumMargenH);
+	//double min_energia = EnergiaMinimaMargenes(LumTex, LumMargenV, LumMargenH);/*refactored*/
+	vector<pair<double,pair<unsigned,unsigned> > >energias;
+	energias = EnergiaMinimaMargenes(LumTex, LumMargenV, LumMargenH);
 	
      //Segunda parte: a partir de la energía mínima obtenida, obtenemos las posiciones del inicio del nuevo Bi.
 	unsigned int rowBi=0, colBi=0;
 	
-	CoordenadasNuevasBi(LumTex, LumMargenV, LumMargenH, min_energia, rowBi, colBi);
+	CoordenadasNuevasBi(LumTex, LumMargenV, LumMargenH, energias, rowBi, colBi);
 	
      //Ahora ya podemos obtener Bi.
 	BiR.extrae(texR, rowBi, colBi);
@@ -128,9 +130,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 		
 		marcaSegunSeamV(LumMargenVEscogido, BiR, BiG, BiB);
 	}
-	
-	escribe((char*)"Bi_a_agregar.png", BiR, BiG, BiB);
-	
+
 	if(row!=0)
 	{
 		Imagen LumMargenHEscogido(margenH.fils(), margenH.cols());
@@ -187,13 +187,15 @@ double compara(const Imagen& A,const Imagen& B,Imagen& Result)
 
 //Busca todos los márgenes en forma de L (dividido en dos márgenes, a su vez) en la textura y...
 //...retorna la energía del margen L que mejor se adapta a LumMargenV y LumMargenH.
-double EnergiaMinimaMargenes(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMargenH)
+vector<pair<double,pair<unsigned,unsigned> > > EnergiaMinimaMargenes(Imagen & LumTex,
+	Imagen & LumMargenV, Imagen & LumMargenH)
 {
 	Imagen margenV(LumMargenV.fils(), LumMargenV.cols()); //auxiliar
 	Imagen margenH(LumMargenH.fils(), LumMargenH.cols()); //auxiliar
 	
      //A continuación se buscarán los valores para la energía mínima para los márgenes
-     	double min_energia = 1000000;
+     	//double min_energia = 1000000;/*refactored ! unused*/
+     	vector<pair<double,pair<unsigned,unsigned> > >energias;
      	double valor; //Un auxiliar
      	unsigned int tam_BiMargenes = LumMargenV.fils();
      	
@@ -210,25 +212,40 @@ double EnergiaMinimaMargenes(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumM
 			valor += compara(LumMargenH, margenH);
 			
 			//Si la energía obtenida es menor a la que guardamos, guardamos ésa.
-			min_energia = min(valor, min_energia);
+			//min_energia = min(valor, min_energia);/*refactored*/
+			pair<unsigned,unsigned> coord (i,j);
+			pair<double,pair<unsigned,unsigned> > energia (valor,coord);
+			energias.push_back(energia);
 		}
 	}
-	return min_energia;
+	sort(energias.begin(),energias.end());
+	return energias;
 }
 	
 //A partir de min_energia calcula un margen de error y retorna aletoriamente la posición de...
 //... inicio de uno de los márgenes en forma de L que están dentro de ese error.
-void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMargenH, double min_energia, unsigned int & rowBi, unsigned int & colBi)
+void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMargenH,
+	vector<pair<double,pair<unsigned,unsigned> > >& energias,
+	unsigned int & rowBi, unsigned int & colBi)
 {
-	double error = min_energia*0.1;
+	//double error = energias[0].first*0.1;
+	const double min_energia=energias[0].first,error = min_energia*0.1;
 	
 	Imagen margenV(LumMargenV.fils(), LumMargenV.cols()); //auxiliar
 	Imagen margenH(LumMargenH.fils(), LumMargenH.cols()); //auxiliar
 	
-	double valor = 0.0; //auxiliar
-	
-     //Ahora que disponemos del rango de energias que aceptaremos (min_energia+-error), guardamos en una lista las posiciones de los márgenes aceptables.
-	std::pair<unsigned int,unsigned int> p;
+	//double valor = 0.0; //auxiliar
+	unsigned int valids = 0;
+
+	while(energias[valids].first-min_energia < error)
+		valids++;
+
+	pair<unsigned,unsigned> triat = energias[rand() % valids].second;
+	rowBi = triat.first;
+	colBi = triat.second;
+
+     //Ahora que disponemos del rango de energias que aceptaremos (min_energia+-error), guardamos en una lista las posiciones de los márgenes aceptables. /*refactored*/
+	/*std::pair<unsigned int,unsigned int> p;
 	std::vector< std::pair<unsigned int,unsigned int> > coordenadas;
 	
 	unsigned int tam_BiMargenes = LumMargenV.fils();
@@ -253,17 +270,17 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMarge
 				coordenadas.push_back(p);
 			}
 		}
-	}
+	}*/
 
 	//Ya casi estamos. Ahora hay que escoger una posición (pair) de las que hay en el vector, aleatoriamente.
-	if(coordenadas.size()==0)
+	/*if(coordenadas.size()==0)
 		std::cout<<"CoordenadasNuevasBi: no hay margenes aceptables!"<<std::endl;
 	else
 		p = coordenadas.at(rand() % coordenadas.size());
-	
+
 	//(rowBi y colBi se modifican por parámetro)		    
 	rowBi = p.first;
-	colBi = p.second;		
+	colBi = p.second;*/		
 }
 
 void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & BiB)
@@ -271,7 +288,7 @@ void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & B
      //Marcamos con valores fuera de rango el seam en la imagen LumMargenVEscogido
 	find_v_seam(LumMargenV);
 	
-	imprime_pant(LumMargenV);
+	//imprime_pant(LumMargenV);
 	
 	unsigned int col;
 	
@@ -280,7 +297,7 @@ void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & B
 		col = 0;
 		while(LumMargenV(row, col) < 10E20) //10E20: valor fuera de rango.
 		{
-		std::cout<<"Marcando V seam: "<<row<<", "<<col<<std::endl;
+		//std::cout<<"Marcando V seam: "<<row<<", "<<col<<std::endl;
 			BiR(row, col) = 10E20;
 			BiG(row, col) = 10E20;
 			BiB(row, col) = 10E20;
@@ -301,7 +318,7 @@ void marcaSegunSeamH(Imagen & LumMargenH, Imagen & BiR, Imagen & BiG, Imagen & B
      //Marcamos con valores fuera de rango el seam en la imagen LumMargenVEscogido
 	find_h_seam(LumMargenH);
 	
-	imprime_pant(LumMargenH);
+	//imprime_pant(LumMargenH);
 	
 	unsigned int row;
 	
@@ -310,7 +327,7 @@ void marcaSegunSeamH(Imagen & LumMargenH, Imagen & BiR, Imagen & BiG, Imagen & B
 		row = 0;
 		while(LumMargenH(row, col) < 10E20) //10E20: valor fuera de rango.
 		{
-		std::cout<<"Marcando H seam: "<<row<<", "<<col<<std::endl;
+		//std::cout<<"Marcando H seam: "<<row<<", "<<col<<std::endl;
 			BiR(row, col) = 10E20;
 			BiG(row, col) = 10E20;
 			BiB(row, col) = 10E20;

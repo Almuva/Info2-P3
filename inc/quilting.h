@@ -10,6 +10,8 @@
 #include <string.h>
 #include <vector>
 #include <utility>
+#include <algorithm>
+#include <vector>
 
 #include "Imagen.h"
 #include "seam_finding.h"
@@ -30,11 +32,12 @@ double compara(const Imagen& A,const Imagen& B,Imagen& Result);
 
 double compara(const Imagen& A,const Imagen& B);
 
-double EnergiaMinimaMargenes(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMargenH);
+vector<pair<double,pair<unsigned,unsigned> > > EnergiaMinimaMargenes(Imagen & LumTex,
+	Imagen & LumMargenV, Imagen & LumMargenH);
 
 void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMargenH,
-			 double min_energia, 
-			 unsigned int & rowBi, unsigned int & colBi);
+	vector<pair<double,pair<unsigned,unsigned> > >& energias, 
+	unsigned int & rowBi, unsigned int & colBi);
 
 void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & BiB);
 
