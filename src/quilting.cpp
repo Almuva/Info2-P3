@@ -45,9 +45,11 @@ void quilting( Imagen & texR, Imagen & texG, Imagen & texB,
 			
 			col += increment;
 			
-			//std::cout<<"caso normal"<<std::endl;
+			std::cout<<"caso normal"<<std::endl;
 			
-			cont++; if(cont == max_iteraciones) result=2; //Debugger
+			escribe((char*)"salida_parcial.png",IMoutR,IMoutG,IMoutB);
+			
+//			cont++; if(cont == max_iteraciones) result=2; //Debugger
 		}
 		while(result == 0); //0==caso normal
 		
@@ -56,9 +58,9 @@ void quilting( Imagen & texR, Imagen & texG, Imagen & texB,
 			col = 0;
 			row += increment;
 			
-			//std::cout<<"borde!!!"<<std::endl;
+			std::cout<<"borde!!!"<<std::endl;
 		}
-		else if(result == 2){/*std::cout<<"esquina!!!!!!!!!"<<std::endl;*/ break;} //2==se llega al final de la última fila
+		else if(result == 2){std::cout<<"esquina!!!!!!!!!"<<std::endl; break;} //2==se llega al final de la última fila
 	}
 }
 
@@ -90,15 +92,15 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 {
 	 //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
 	Imagen LumMargenV(tam_Bi+tam_Bi/3, tam_Bi/6, 0);
-	Imagen margenV(LumMargenV.fils(), LumMargenV.cols()); //auxiliar
+	Imagen margenV(LumMargenV.fils(), LumMargenV.cols(), 0); //auxiliar
 	
-	margenV.extrae(IMoutR, row, col); LumMargenV+=margenV;	
+	margenV.extrae(IMoutR, row, col); LumMargenV+=margenV;
 	margenV.extrae(IMoutG, row, col); LumMargenV+=margenV;
 	margenV.extrae(IMoutB, row, col); LumMargenV+=margenV;
 
 	 //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
 	Imagen LumMargenH(tam_Bi/6, tam_Bi+tam_Bi/3, 0);
-	Imagen margenH(LumMargenH.fils(), LumMargenH.cols()); //auxiliar
+	Imagen margenH(LumMargenH.fils(), LumMargenH.cols(), 0); //auxiliar
 	
 	margenH.extrae(IMoutR, row, col); LumMargenH+=margenH;
 	margenH.extrae(IMoutG, row, col); LumMargenH+=margenH;
@@ -119,7 +121,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	BiR.extrae(texR, rowBi, colBi);
 	BiG.extrae(texG, rowBi, colBi);
 	BiB.extrae(texB, rowBi, colBi);
-/*	
+	
 	if(col!=0)
 	{
 		Imagen LumMargenVEscogido(margenV.fils(), margenV.cols());
@@ -141,9 +143,9 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 		
 		marcaSegunSeamH(LumMargenHEscogido, BiR, BiG, BiB);
 	}
-*/
+
 	
-	escribe((char*)"Bi_a_agregar.png", BiR, BiG, BiB);
+//	escribe((char*)"Bi_a_agregar.png", BiR, BiG, BiB);
 }
 
 //Aplica el significado de "energía" aplicado en la práctica y la retorna.
@@ -191,8 +193,8 @@ double compara(const Imagen& A,const Imagen& B,Imagen& Result)
 double EnergiaMinimaMargenes(Imagen & LumTex,Imagen & LumMargenV,Imagen & LumMargenH,
 	vector<pair<double,pair<unsigned,unsigned> > >& energias)
 {
-	Imagen margenV(LumMargenV.fils(), LumMargenV.cols()); //auxiliar
-	Imagen margenH(LumMargenH.fils(), LumMargenH.cols()); //auxiliar
+	Imagen margenV(LumMargenV.fils(), LumMargenV.cols(), 0); //auxiliar
+	Imagen margenH(LumMargenH.fils(), LumMargenH.cols(), 0); //auxiliar
 	
 	//A continuación se buscarán los valores para la energía mínima para los márgenes
 	//double min_energia = 1000000;/*refactored ! unused*/
@@ -233,8 +235,8 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMarge
 	//double error = energias[0].first*0.1;
 	const double min_energia=energias[0].first,error = min_energia*0.1;
 	
-	Imagen margenV(LumMargenV.fils(), LumMargenV.cols()); //auxiliar
-	Imagen margenH(LumMargenH.fils(), LumMargenH.cols()); //auxiliar
+	Imagen margenV(LumMargenV.fils(), LumMargenV.cols(), 0); //auxiliar
+	Imagen margenH(LumMargenH.fils(), LumMargenH.cols(), 0); //auxiliar
 	
 	//double valor = 0.0; //auxiliar
 	unsigned int valids = 0;
@@ -290,7 +292,7 @@ void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & B
 	 //Marcamos con valores fuera de rango el seam en la imagen LumMargenVEscogido
 	find_v_seam(LumMargenV);
 	
-	//imprime_pant(LumMargenV);
+	imprime_pant(LumMargenV);
 	
 	unsigned int col;
 	
@@ -320,7 +322,7 @@ void marcaSegunSeamH(Imagen & LumMargenH, Imagen & BiR, Imagen & BiG, Imagen & B
 	 //Marcamos con valores fuera de rango el seam en la imagen LumMargenVEscogido
 	find_h_seam(LumMargenH);
 	
-	//imprime_pant(LumMargenH);
+	imprime_pant(LumMargenH);
 	
 	unsigned int row;
 	
