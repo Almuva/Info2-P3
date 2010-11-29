@@ -197,7 +197,7 @@ void Imagen::extrae(Imagen& I,unsigned int row,unsigned int col)
 	unsigned int fils=dim[0]+row,cols=dim[1]+col,i=0;
 	if(I.fils()<fils || I.cols()<cols)	//check: no se pueden pedir valores fuera de la imagen.
 	{
-		fprintf(stderr,"ERROR: (extrae) Intenta extraer fuera de la imagen !\n");exit(1);
+		return; //fprintf(stderr,"ERROR: (extrae) Intenta extraer fuera de la imagen !\n");exit(1);
 	}
 
 	for(unsigned int f=row;f<fils;f++)
