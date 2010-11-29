@@ -8,7 +8,7 @@ double menor (double a, double b, double c){
 	
 	if (b<=a && b<=c)	return b; //by default
 	else if (a<=b && a<=c)	return a;
-	else	return c;
+	else			return c;
 }
 
 // find the position of the lower int: -1, 0, 1
@@ -28,14 +28,15 @@ unsigned int smallestV(Imagen &cumulativeE){
 
 	double min = 10E8; // valor de inicio
 
-	for (unsigned int i=0; i<cumulativeE.fils(); i++){
-		//if (i>330)cout<<i<<":"<<cumulativeE(i,c)<<endl;
-		if (cumulativeE(i,c)<min){
+	for (unsigned int i=0; i<cumulativeE.fils(); i++)
+	{
+		if (cumulativeE(i,c)<min)
+		{
 			v = i;
 			min = cumulativeE(i,c);
 		}
  	}
- 	//cout<<"D"<<v<<endl;
+
 	return v;
 }
 
@@ -47,8 +48,10 @@ unsigned int smallestH(Imagen &cumulativeE){
 
 	double min = 10E8; // valor de inicio
 
-	for (unsigned int j=0; j<cumulativeE.cols(); j++){
-		if (cumulativeE(f,j)<min){
+	for (unsigned int j=0; j<cumulativeE.cols(); j++)
+	{
+		if (cumulativeE(f,j)<min)
+		{
 			h = j;
 			min = cumulativeE(f,j);
 		}
@@ -57,23 +60,21 @@ unsigned int smallestH(Imagen &cumulativeE){
 }
 
 // BACKTRACK
-void backtrackV(Imagen &cE, int i, unsigned int j, Imagen & E){
+void backtrackV(Imagen &cE, int i, unsigned int j, Imagen & E)
+{
 
-//	cout<<"backtrackV: "<<i<<", "<<j<<endl;
-	if (i > 0){
+	if (i > 0)
+	{
 		// Aj = incremento de j 
 		int Aj = minPosition(cE(i-1,j-1), cE(i-1,j), cE(i-1,j+1));
-//		printf("Escojo entre %f, %f y %f... --> %d!!\n", cE(i-1,j-1), cE(i-1,j), cE(i-1,j+1), Aj);
 		int f = i-1;
 		int c = j + Aj;
-//		printf("%d = %d + %d\n", c, j, Aj);
+
 		if(c == -1) c = 1;
 		if((unsigned int)c == cE.cols()) c = cE.cols()-2;
-//		cout<<"siguiente: "<<f<<", "<<c<<endl;
+
 		E(f, c) = 10E20;
-//		imprime_pant(E); printf("\n\n\n");
-//		char car;
-//		scanf("%c\n", &car);
+
 		backtrackV(cE, f, c, E);
 	}	
 }
@@ -86,63 +87,61 @@ void find_v_seam(Imagen & E){
 
 	// the first step is to traverse the image from the second row to the last row and 
 	//compute the CUMULATIVE MINIMUM ENERGY M for all possible connected seams for each entry (i, j)
-	for (unsigned int i=1; i<cE.fils(); i++){
-		for (unsigned int j=0; j<cE.cols(); j++){
-			
+	for (unsigned int i=1; i<cE.fils(); i++)
+	{
+		for (unsigned int j=0; j<cE.cols(); j++)
+		{
 			cE(i,j) += menor(cE(i-1,j-1), cE(i-1,j), cE(i-1,j+1));
 		}
 	}
-//	escribe((char*)"acumuladas.jpg", cE);
-	
-//	imprime_pant(cE); printf("\n\n");
-	
 	
 	unsigned int col = smallestH(cE);
 	
 	E(cE.fils()-1, col) = 10E20;
+	
 	backtrackV(cE, cE.fils()-1, col, E);
 }
 
 ///////////////////////////////////////////////////////////////////////
 
 // BACKTRACK
-void backtrackH(Imagen &cE, int i, unsigned int j, Imagen & E){
+void backtrackH(Imagen &cE, int i, unsigned int j, Imagen & E)
+{
 
 	//cout<<"bt"<<i<<endl;
-	if (i > 0){
+	if (i > 0)
+	{
 		int c = i-1;
 		// Aj = incremento de j 
-	//cout<<"aj:"<<endl;
-	//cout<<"min"<<cE(j-1,c)<<":"<<cE(j,c)<<":"<<cE(j+1,c)<<endl;
 		int Aj = minPosition(cE(j-1,c), cE(j,c), cE(j+1,c));
-	//	cout<<Aj<<endl;
 		int f = j + Aj;
+		
 		if(f == -1) f = 1;
 		if((unsigned int)f == cE.fils()) f = cE.fils()-2;
+		
 		E(f, c) = 10E20;
+		
 		backtrackH(cE, c, f, E);
 	}	
 }
 
 // @ seams: seam de posicions de menor energia
 // @ energies: e(HoG)
-void find_h_seam(Imagen &E){
+void find_h_seam(Imagen &E)
+{
 	
 	Imagen cE(E); //matriz de valores minimos acumulados
-	// copy first row of energies
-	// done!
 
 	// the first step is to traverse the image from the second row to the last row and 
 	//compute the CUMULATIVE MINIMUM ENERGY M for all possible connected seams for each entry (i, j)
-	for (unsigned int j=1; j<cE.cols(); j++){
-		for (unsigned int i=0; i<cE.fils(); i++){
-				
+	for (unsigned int j=1; j<cE.cols(); j++)
+	{
+		for (unsigned int i=0; i<cE.fils(); i++)
+		{
 			double suma =  cE(i,j) + menor(cE(i-1,j-1), cE(i,j-1), cE(i+1,j-1));
-			//cout<<e(i,j)<<"-"<<menor(e(i-1,j-1), e(i-1,j), e(i-1,j+1))<<">"<< suma <<endl;
 			cE(i,j) = suma;
 		}
 	}
-	//e.recorta(0,255);
 	//escribe("acumuladasH.jpg", e);
 	unsigned int row = smallestV(cE);
 	

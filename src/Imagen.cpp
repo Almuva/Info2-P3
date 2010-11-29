@@ -178,6 +178,7 @@ double Imagen::sum()
 	return suma;
 }
 
+//Redimendiona una imagen (borrándola entera) y la inicializa a cero.
 void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 {
 	delete[] datos;
@@ -191,7 +192,6 @@ void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 }
 
 //Extrae (copia) de I una imagen, del tamaño (f, c), del tamaño de this y la asigna.
-//Retorna true si es posible i false sino
 void Imagen::extrae(Imagen& I,unsigned int row,unsigned int col)
 {
 	if(  (row > I.fils()-1) || (col > I.cols()-1)  )
@@ -201,11 +201,14 @@ void Imagen::extrae(Imagen& I,unsigned int row,unsigned int col)
 	}
 
 	unsigned int fils=dim[0]+row,cols=dim[1]+col,i=0;
-	if(I.fils()<fils || I.cols()<cols)	//check: no se pueden pedir valores fuera de la imagen.
+	
+	//check: no se pueden pedir valores fuera de la imagen.
+	if(I.fils()<fils || I.cols()<cols)
 	{
-		return; //fprintf(stderr,"ERROR: (extrae) Intenta extraer fuera de la imagen !\n");exit(1);
+		return;
 	}
 
+	//bucle de copia
 	for(unsigned int f=row;f<fils;f++)
 		for(unsigned int c=col;c<cols;c++)
 		{
@@ -215,7 +218,7 @@ void Imagen::extrae(Imagen& I,unsigned int row,unsigned int col)
 }
 
 //Mete en this una imagen más pequeña, im, partiendo de la posición row, col
-//Valores de return: 1 si metiendo im se llega al lateral de this.
+//Valores de return:    1 si metiendo im se llega al lateral de this.
 //			2 si metiendo im se llega a la esquina inferior derecha de this.
 //			0 si se mete y no ocurre lo anterior
 int Imagen::agrega(Imagen & im, unsigned int row, unsigned int col)
@@ -228,7 +231,7 @@ int Imagen::agrega(Imagen & im, unsigned int row, unsigned int col)
 	
 	unsigned int retorno = 0;
 
-	unsigned int index_im = 0; //Para ir leyando im
+	unsigned int index_im = 0; //Para ir leyendo im
 	
 	unsigned int jump_cols = 0; //Para omitir x ultimas columnas de im
 	
@@ -263,8 +266,6 @@ int Imagen::agrega(Imagen & im, unsigned int row, unsigned int col)
 		}
 		index_im+=jump_cols;
 	}
-	
-//	std::cout<<"retorno: "<<retorno<<std::endl;
 	
 	return retorno;
 }
