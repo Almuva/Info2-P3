@@ -117,7 +117,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	BiR.extrae(texR, rowBi, colBi);
 	BiG.extrae(texG, rowBi, colBi);
 	BiB.extrae(texB, rowBi, colBi);
-	
+/*	
 	if(col!=0)
 	{
 		Imagen LumMargenVEscogido(margenV.fils(), margenV.cols());
@@ -141,6 +141,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 		
 		marcaSegunSeamH(LumMargenHEscogido, BiR, BiG, BiB);
 	}
+*/
 	
 	escribe((char*)"Bi_a_agregar.png", BiR, BiG, BiB);
 }
