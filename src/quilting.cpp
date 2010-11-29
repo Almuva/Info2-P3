@@ -91,16 +91,16 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	 //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
 	Imagen LumMargenV(tam_Bi+tam_Bi/3, tam_Bi/6, 0);
 	Imagen margenV(LumMargenV.fils(), LumMargenV.cols()); //auxiliar
-	
-	margenV.extrae(IMoutR, row, col); LumMargenV+=margenV;	
+
+	margenV.extrae(IMoutR, row, col); LumMargenV+=margenV;
 	margenV.extrae(IMoutG, row, col); LumMargenV+=margenV;
 	margenV.extrae(IMoutB, row, col); LumMargenV+=margenV;
 
 	 //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
 	Imagen LumMargenH(tam_Bi/6, tam_Bi+tam_Bi/3, 0);
 	Imagen margenH(LumMargenH.fils(), LumMargenH.cols()); //auxiliar
-	
-	margenH.extrae(IMoutR, row, col); LumMargenH+=margenH;
+
+	margenH.extrae(IMoutR, row, col); LumMargenH+=margenH;std::cout<<"HOLA"<<std::endl;
 	margenH.extrae(IMoutG, row, col); LumMargenH+=margenH;
 	margenH.extrae(IMoutB, row, col); LumMargenH+=margenH;
 	
@@ -112,9 +112,9 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	
 	 //Segunda parte: a partir de la energía mínima obtenida, obtenemos las posiciones del inicio del nuevo Bi.
 	unsigned int rowBi=0, colBi=0;
-	
+
 	CoordenadasNuevasBi(LumTex, LumMargenV, LumMargenH, energias, rowBi, colBi);
-	
+
 	 //Ahora ya podemos obtener Bi.
 	BiR.extrae(texR, rowBi, colBi);
 	BiG.extrae(texG, rowBi, colBi);
@@ -194,7 +194,6 @@ double EnergiaMinimaMargenes(Imagen & LumTex,Imagen & LumMargenV,Imagen & LumMar
 	Imagen margenH(LumMargenH.fils(), LumMargenH.cols()); //auxiliar
 	
 	//A continuación se buscarán los valores para la energía mínima para los márgenes
-	//double min_energia = 1000000;/*refactored ! unused*/
 		energias.reserve(LumTex.fils()*LumTex.cols());
 	
 		double valor; //Un auxiliar
@@ -215,7 +214,6 @@ double EnergiaMinimaMargenes(Imagen & LumTex,Imagen & LumMargenV,Imagen & LumMar
 			valor += compara(LumMargenH, margenH);
 			
 			//Si la energía obtenida es menor a la que guardamos, guardamos ésa.
-			//min_energia = min(valor, min_energia);/*refactored*/
 			pair<double,pair<unsigned,unsigned> > energia (valor,pair<unsigned,unsigned>(i,j));
 			energias.push_back(energia);
 		}
@@ -229,13 +227,11 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMarge
 	vector<pair<double,pair<unsigned,unsigned> > >& energias,
 	unsigned int & rowBi, unsigned int & colBi)
 {
-	//double error = energias[0].first*0.1;
 	const double min_energia=energias[0].first,error = min_energia*0.1;
 	
 	Imagen margenV(LumMargenV.fils(), LumMargenV.cols()); //auxiliar
 	Imagen margenH(LumMargenH.fils(), LumMargenH.cols()); //auxiliar
 	
-	//double valor = 0.0; //auxiliar
 	unsigned int valids = 0;
 
 	while(energias[valids].first-min_energia < error)
@@ -244,44 +240,6 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMarge
 	pair<unsigned,unsigned> triat = energias[rand() % valids].second;
 	rowBi = triat.first;
 	colBi = triat.second;
-
-	 //Ahora que disponemos del rango de energias que aceptaremos (min_energia+-error), guardamos en una lista las posiciones de los márgenes aceptables. /*refactored*/
-	/*std::pair<unsigned int,unsigned int> p;
-	std::vector< std::pair<unsigned int,unsigned int> > coordenadas;
-	
-	unsigned int tam_BiMargenes = LumMargenV.fils();
-	
-	for(unsigned int i=0; i<=LumTex.fils()-tam_BiMargenes; i++) //%%% <= ??
-	{
-		for(unsigned int j=0; j<=LumTex.cols()-tam_BiMargenes; j++) //%%% <= ??
-		{
-			//Obtenemos el margen correspondiente a la iteración
-			margenV.extrae(LumTex, i, j);
-			margenH.extrae(LumTex, i, j);
-			
-			//Se suman las energías de los dos márgenes
-			valor = compara(LumMargenV, margenV);
-			valor += compara(LumMargenH, margenH);
-			
-			//Si el valor de energía es aceptable añadimos las coordenadas al vector de pairs.
-			if( (valor <= min_energia+error) && (valor >= min_energia-error) )
-			{
-				p.first = i;
-				p.second = j;
-				coordenadas.push_back(p);
-			}
-		}
-	}*/
-
-	//Ya casi estamos. Ahora hay que escoger una posición (pair) de las que hay en el vector, aleatoriamente.
-	/*if(coordenadas.size()==0)
-		std::cout<<"CoordenadasNuevasBi: no hay margenes aceptables!"<<std::endl;
-	else
-		p = coordenadas.at(rand() % coordenadas.size());
-
-	//(rowBi y colBi se modifican por parámetro)			
-	rowBi = p.first;
-	colBi = p.second;*/		
 }
 
 void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & BiB)

@@ -191,7 +191,7 @@ void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 }
 
 //Extrae (copia) de I una imagen, del tamaño (f, c), del tamaño de this y la asigna.
-//Retorna true si es posible i false sino
+//si va a extraer fuera de imagen cierra el programa con un mensage de error
 void Imagen::extrae(Imagen& I,unsigned int row,unsigned int col)
 {
 	unsigned int fils=dim[0]+row,cols=dim[1]+col,i=0;
