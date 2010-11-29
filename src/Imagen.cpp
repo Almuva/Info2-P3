@@ -194,6 +194,12 @@ void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 //Retorna true si es posible i false sino
 void Imagen::extrae(Imagen& I,unsigned int row,unsigned int col)
 {
+	if(  (row > I.fils()-1) || (col > I.cols()-1)  )
+	{
+		fprintf(stderr,"En ''Imagen::extrae(...)'' se lee fuera de rango!!!\n");
+		exit(1);
+	}
+
 	unsigned int fils=dim[0]+row,cols=dim[1]+col,i=0;
 	if(I.fils()<fils || I.cols()<cols)	//check: no se pueden pedir valores fuera de la imagen.
 	{

@@ -49,7 +49,7 @@ void quilting( Imagen & texR, Imagen & texG, Imagen & texB,
 			
 			escribe((char*)"salida_parcial.png",IMoutR,IMoutG,IMoutB);
 			
-//			cont++; if(cont == max_iteraciones) result=2; //Debugger
+			cont++; if(cont == max_iteraciones) result=2; //Debugger
 		}
 		while(result == 0); //0==caso normal
 		
@@ -98,7 +98,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	margenV.extrae(IMoutG, row, col); LumMargenV+=margenV;
 	margenV.extrae(IMoutB, row, col); LumMargenV+=margenV;
 
-	 //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
+	 //Declaramos y llenamos una imagen con la suma de colores del margen horizontal. De esta forma no hay que calcularlo cada vez.
 	Imagen LumMargenH(tam_Bi/6, tam_Bi+tam_Bi/3, 0);
 	Imagen margenH(LumMargenH.fils(), LumMargenH.cols(), 0); //auxiliar
 	
