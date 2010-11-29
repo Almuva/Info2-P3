@@ -29,7 +29,7 @@ void quilting( Imagen & texR, Imagen & texG, Imagen & texB,
 	
 	col += increment;
 	
-	int cont = 0, max_iteraciones = 7; //Debugger
+//	int cont = 0, max_iteraciones = 7; //Debugger
 	
 	 //El siguiente bucle va llenando IMout según los valores que va retornando la función Imagen::agrega(), en "result"
 	while(1)
@@ -47,9 +47,9 @@ void quilting( Imagen & texR, Imagen & texG, Imagen & texB,
 			
 			std::cout<<"caso normal"<<std::endl;
 			
-			escribe((char*)"salida_parcial.png",IMoutR,IMoutG,IMoutB);
+//			escribe((char*)"salida_parcial.png",IMoutR,IMoutG,IMoutB);
 			
-			cont++; if(cont == max_iteraciones) result=2; //Debugger
+//			cont++; if(cont == max_iteraciones) result=2; //Debugger
 		}
 		while(result == 0); //0==caso normal
 		
@@ -132,7 +132,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 		
 		marcaSegunSeamV(LumMargenVEscogido, BiR, BiG, BiB);
 	}
-
+/*
 	if(row!=0)
 	{
 		Imagen LumMargenHEscogido(margenH.fils(), margenH.cols());
@@ -143,7 +143,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 		
 		marcaSegunSeamH(LumMargenHEscogido, BiR, BiG, BiB);
 	}
-
+*/
 	
 //	escribe((char*)"Bi_a_agregar.png", BiR, BiG, BiB);
 }
@@ -290,6 +290,7 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMarge
 void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & BiB)
 {
 	 //Marcamos con valores fuera de rango el seam en la imagen LumMargenVEscogido
+	 
 	find_v_seam(LumMargenV);
 	
 	imprime_pant(LumMargenV);

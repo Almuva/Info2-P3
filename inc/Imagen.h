@@ -32,7 +32,7 @@ class Imagen
 	inline double & operator()(unsigned int i, unsigned int j)
 	{
 		//evita leer fuera de rango
-		const unsigned int N=5;
+		const unsigned int N=1;
 
 		if(i>=dim[0])
 		{

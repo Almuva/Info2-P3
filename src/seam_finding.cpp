@@ -26,7 +26,7 @@ unsigned int smallestV(Imagen &cumulativeE){
 	
 	unsigned int v; 
 
-	int min = 10E8; // valor de inicio
+	double min = 10E8; // valor de inicio
 
 	for (unsigned int i=0; i<cumulativeE.fils(); i++){
 		//if (i>330)cout<<i<<":"<<cumulativeE(i,c)<<endl;
@@ -45,7 +45,7 @@ unsigned int smallestH(Imagen &cumulativeE){
 	
 	unsigned int h; 
 
-	int min = 10E8; // valor de inicio
+	double min = 10E8; // valor de inicio
 
 	for (unsigned int j=0; j<cumulativeE.cols(); j++){
 		if (cumulativeE(f,j)<min){
@@ -85,7 +85,11 @@ void find_v_seam(Imagen & E){
 			cE(i,j) = suma;
 		}
 	}
-	//escribe((char*)"acumuladas.jpg", e);
+	escribe((char*)"acumuladas.jpg", cE);
+	
+	imprime_pant(cE); printf("\n\n");
+	
+	
 	unsigned int col = smallestH(cE);
 	
 	E(cE.fils()-1, col) = 10E20;
