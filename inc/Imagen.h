@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <iostream> 
+using namespace std;
 
 class Imagen
 {
@@ -60,7 +61,7 @@ class Imagen
 	void resize_erase(unsigned int rows, unsigned int cols);
 	int agrega(Imagen & im, unsigned int row, unsigned int col);
 
-	bool extrae(Imagen& I,unsigned int f,unsigned int c);
+	void extrae(Imagen& I,unsigned int f,unsigned int c);
 
 	void recorta(float M,float m);
 	Imagen & desplaza(int dim, int paso);

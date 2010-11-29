@@ -192,18 +192,20 @@ void Imagen::resize_erase(unsigned int rows, unsigned int cols)
 
 //Extrae (copia) de I una imagen, del tamaño (f, c), del tamaño de this y la asigna.
 //Retorna true si es posible i false sino
-bool Imagen::extrae(Imagen& I,unsigned int row,unsigned int col)
+void Imagen::extrae(Imagen& I,unsigned int row,unsigned int col)
 {
-	if(I.fils()<dim[0]+row || I.cols()<dim[1]+col){return false;}//check: no se pueden pedir valores fuera de la imagen.
-	
-	unsigned int count=0;
+	unsigned int fils=dim[0]+row,cols=dim[1]+col,i=0;
+	if(I.fils()<fils || I.cols()<cols)	//check: no se pueden pedir valores fuera de la imagen.
+	{
+		fprintf(stderr,"ERROR: (extrae) Intenta extraer fuera de la imagen !\n");exit(1);
+	}
 
-	for(unsigned int i=row; i<row+dim[0]; i++)
-		for(unsigned int j=col; j<col+dim[1]; j++)
+	for(unsigned int f=row;f<fils;f++)
+		for(unsigned int c=col;c<cols;c++)
 		{
-			datos[count]=I(i,j);count++;
+			datos[i]=I(f,c);
+			i++;
 		}
-	return true;
 }
 
 //Mete en this una imagen más pequeña, im, partiendo de la posición row, col

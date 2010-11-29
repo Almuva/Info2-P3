@@ -59,7 +59,7 @@ unsigned int smallestH(Imagen &cumulativeE){
 // BACKTRACK
 void backtrackV(Imagen &cE, int i, unsigned int j, Imagen & E){
 
-	cout<<"backtrackV: "<<i<<", "<<j<<endl;
+	//cout<<"backtrackV: "<<i<<", "<<j<<endl;
 	if (i >= 0){
 		// Aj = incremento de j 
 		int Aj = minPosition(cE(i-1,j-1), cE(i-1,j), cE(i-1,j+1));
