@@ -47,8 +47,6 @@ void quilting( Imagen & texR, Imagen & texG, Imagen & texB,
 			
 			std::cout<<"caso normal"<<std::endl;
 			
-//			escribe((char*)"salida_parcial.png",IMoutR,IMoutG,IMoutB);
-			
 //			cont++; if(cont == max_iteraciones) result=2; //Debugger
 		}
 		while(result == 0); //0==caso normal
@@ -132,7 +130,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 		
 		marcaSegunSeamV(LumMargenVEscogido, BiR, BiG, BiB);
 	}
-/*
+
 	if(row!=0)
 	{
 		Imagen LumMargenHEscogido(margenH.fils(), margenH.cols());
@@ -143,7 +141,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 		
 		marcaSegunSeamH(LumMargenHEscogido, BiR, BiG, BiB);
 	}
-*/
+
 	
 //	escribe((char*)"Bi_a_agregar.png", BiR, BiG, BiB);
 }
@@ -293,7 +291,7 @@ void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & B
 	 
 	find_v_seam(LumMargenV);
 	
-	imprime_pant(LumMargenV);
+//	imprime_pant(LumMargenV);
 	
 	unsigned int col;
 	
@@ -323,7 +321,7 @@ void marcaSegunSeamH(Imagen & LumMargenH, Imagen & BiR, Imagen & BiG, Imagen & B
 	 //Marcamos con valores fuera de rango el seam en la imagen LumMargenVEscogido
 	find_h_seam(LumMargenH);
 	
-	imprime_pant(LumMargenH);
+//	imprime_pant(LumMargenH);
 	
 	unsigned int row;
 	

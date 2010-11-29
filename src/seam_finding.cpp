@@ -59,14 +59,22 @@ unsigned int smallestH(Imagen &cumulativeE){
 // BACKTRACK
 void backtrackV(Imagen &cE, int i, unsigned int j, Imagen & E){
 
-	//cout<<"backtrackV: "<<i<<", "<<j<<endl;
-	if (i >= 0){
+//	cout<<"backtrackV: "<<i<<", "<<j<<endl;
+	if (i > 0){
 		// Aj = incremento de j 
 		int Aj = minPosition(cE(i-1,j-1), cE(i-1,j), cE(i-1,j+1));
+//		printf("Escojo entre %f, %f y %f... --> %d!!\n", cE(i-1,j-1), cE(i-1,j), cE(i-1,j+1), Aj);
 		int f = i-1;
-		unsigned int c = j + Aj;
-		backtrackV(cE, f, c, E);
+		int c = j + Aj;
+//		printf("%d = %d + %d\n", c, j, Aj);
+		if(c == -1) c = 1;
+		if((unsigned int)c == cE.cols()) c = cE.cols()-2;
+//		cout<<"siguiente: "<<f<<", "<<c<<endl;
 		E(f, c) = 10E20;
+//		imprime_pant(E); printf("\n\n\n");
+//		char car;
+//		scanf("%c\n", &car);
+		backtrackV(cE, f, c, E);
 	}	
 }
 
@@ -81,13 +89,12 @@ void find_v_seam(Imagen & E){
 	for (unsigned int i=1; i<cE.fils(); i++){
 		for (unsigned int j=0; j<cE.cols(); j++){
 			
-			double suma =  cE(i,j) + menor(cE(i-1,j-1), cE(i-1,j), cE(i-1,j+1));
-			cE(i,j) = suma;
+			cE(i,j) += menor(cE(i-1,j-1), cE(i-1,j), cE(i-1,j+1));
 		}
 	}
-	escribe((char*)"acumuladas.jpg", cE);
+//	escribe((char*)"acumuladas.jpg", cE);
 	
-	imprime_pant(cE); printf("\n\n");
+//	imprime_pant(cE); printf("\n\n");
 	
 	
 	unsigned int col = smallestH(cE);
@@ -102,16 +109,18 @@ void find_v_seam(Imagen & E){
 void backtrackH(Imagen &cE, int i, unsigned int j, Imagen & E){
 
 	//cout<<"bt"<<i<<endl;
-	if (i >= 0){
+	if (i > 0){
 		int c = i-1;
 		// Aj = incremento de j 
 	//cout<<"aj:"<<endl;
 	//cout<<"min"<<cE(j-1,c)<<":"<<cE(j,c)<<":"<<cE(j+1,c)<<endl;
 		int Aj = minPosition(cE(j-1,c), cE(j,c), cE(j+1,c));
 	//	cout<<Aj<<endl;
-		unsigned int f = j + Aj;
-		backtrackH(cE, c, f, E);
+		int f = j + Aj;
+		if(f == -1) f = 1;
+		if((unsigned int)f == cE.fils()) f = cE.fils()-2;
 		E(f, c) = 10E20;
+		backtrackH(cE, c, f, E);
 	}	
 }
 
@@ -138,6 +147,6 @@ void find_h_seam(Imagen &E){
 	unsigned int row = smallestV(cE);
 	
 	E(row, cE.cols()-1) = 10E20;
-	backtrackH(cE, row, cE.cols()-1, E);
+	backtrackH(cE, cE.cols()-1, row, E);
 }
 
