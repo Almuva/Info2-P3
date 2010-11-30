@@ -58,9 +58,7 @@ void quilting( Imagen & texR, Imagen & texG, Imagen & texB,
 		{
 			col = 0;
 			row += increment;
-			
 //			std::cout<<"borde!!!"<<std::endl;
-
 		}
 		else if(result == 2){/*std::cout<<"esquina!!!!!!!!!"<<std::endl;*/ break;} //2==se llega al final de la última fila
 	}
@@ -267,9 +265,12 @@ void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & B
 		col = 0;
 		while(LumMargenV(row, col) < 10E20) //10E20: valor fuera de rango.
 		{
-			BiR(row, col) = 10E20;
+			/*BiR(row, col) = 10E20;
 			BiG(row, col) = 10E20;
-			BiB(row, col) = 10E20;
+			BiB(row, col) = 10E20;*/
+			BiR(row, col) = 10E20;
+			BiG(row, col) = 0;
+			BiB(row, col) = 0;
 			col++;
 			
 			if(col == LumMargenV.cols()) //Debugger
@@ -286,26 +287,24 @@ void marcaSegunSeamH(Imagen & LumMargenH, Imagen & BiR, Imagen & BiG, Imagen & B
 {
 	//Marcamos con valores fuera de rango el seam en la imagen LumMargenH
 	find_h_seam(LumMargenH);
-	
-	unsigned int row;
-	
+
 	//Marcamos con valores fuera de rango en Bi, según lo obtenido en LumMargenH
 	for(unsigned int col = 0; col < LumMargenH.cols(); col++)
 	{
-		row = 0;
-		while(LumMargenH(row, col) < 10E20) //10E20: valor fuera de rango.
+		for(unsigned int row=0;LumMargenH(row, col) < 10E20;row++) //10E20: valor fuera de rango.
 		{
-			BiR(row, col) = 10E20;
-			BiG(row, col) = 10E20;
-			BiB(row, col) = 10E20;
-			row++;
-			
 			if(row == LumMargenH.fils()) //Debugger
 			{
 				fprintf(stderr,"En ''marcaSegunSeamH()'' se pasa de largo!!!\n");
 				exit(1);
 			}
-		
+
+			/*BiR(row, col) = 10E20;
+			BiG(row, col) = 10E20;
+			BiB(row, col) = 10E20;*/
+			BiR(row, col) = 10E20;
+			BiG(row, col) = 0;
+			BiB(row, col) = 0;
 		}
 	}
 }
