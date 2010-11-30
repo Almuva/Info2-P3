@@ -18,61 +18,47 @@ using namespace Magick;
 
 void uso()
 {
-	fprintf(stderr,"Uso: prueba imagen_entrada(textura) imagen_salida tamanyo_lado_Bi filas_img_salida columnas_img_salida\n");
+	fprintf(stderr,"Uso: prueba texture target imagen_salida tamanyo_lado_Bi\n");
 	exit(1);
-}
-
-void casos_error(Imagen & texR, unsigned int tam_Bi, unsigned int rows_IMout, unsigned int cols_IMout)
-{
-	//Al tamaño de Bi le sumamos el margen (1/6 de la dimensión)
-	if( tam_Bi+tam_Bi/3 > texR.fils() || tam_Bi+tam_Bi/3 > texR.cols() )
-	{
-		fprintf(stderr, "ERROR: Bi+margenes(1/6 de Bi) debe caber dentro de la imagen de entrada!! \n");
-		exit(1);
-	}
-	
-	if( rows_IMout <= texR.fils() || cols_IMout <= texR.cols() )
-	{
-		fprintf(stderr, "ERROR: La imagen de salida debe ser más grande que la de entrada!! \n");
-		exit(1);
-	}
 }
 
 int main(int argc,char **argv)
 {
 //verifica que la cantidad de argumentos es correcta 
-	if(argc<6)
+	if(argc<4)
 		uso();
 
 //obtiene las variables de la entrada
 	argv++;
-	char * entrada_char=*argv++;
+	char * entrada_char1=*argv++;
+	char * entrada_char2=*argv++;
 	char * salida_char=*argv++;
 	int tam_Bi = abs( atoi(*argv++) );
-	int rows_IMout = abs( atoi(*argv++) );
-	int cols_IMout = abs( atoi(*argv++) );
 	strcat(salida_char,".png");
 
-	Imagen texR,texG,texB;
+	Imagen tex1R,tex1G,tex1B,tex2R,tex2G,tex2B,Luminancia1,Luminancia2,imagenAuxuliar;
 
-	texR=lee(entrada_char,0);
-	texG=lee(entrada_char,1);
-	texB=lee(entrada_char,2);
+	tex1R=lee(entrada_char1,0);
+	tex1G=lee(entrada_char1,1);
+	tex1B=lee(entrada_char1,2);
 
-//comprueba que los parámetros sean correctos
-	casos_error(texR, tam_Bi, rows_IMout, cols_IMout);
-
-//se crea cada componente de la imagen de salida, todo a cero
-	Imagen IMoutR(rows_IMout, cols_IMout, 0);
-	Imagen IMoutG(rows_IMout, cols_IMout, 0);
-	Imagen IMoutB(rows_IMout, cols_IMout, 0);
+	tex2R=lee(entrada_char2,0);
+	tex2G=lee(entrada_char2,1);
+	tex2B=lee(entrada_char2,2);
 	
+//cada luminancia es una imagen a parte que guarda la luminancia de la imagen de entrada
+	Luminancia1=tex1R; Luminancia1*=0.3;
+	imagenAuxuliar=tex1G; imagenAuxuliar*=0.59; Luminancia1+=imagenAuxuliar;
+	imagenAuxuliar=tex1B; imagenAuxuliar*=0.11; Luminancia1+=imagenAuxuliar;
 	
-//La función quilting() emprea el bucle principal de llenado de IMout con Bi's
-	quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
+	Luminancia2=tex2R; Luminancia2*=0.3;
+	imagenAuxuliar=tex2G; imagenAuxuliar*=0.59; Luminancia2+=imagenAuxuliar;
+	imagenAuxuliar=tex2B; imagenAuxuliar*=0.11; Luminancia2+=imagenAuxuliar;
 
 //Escribimos el resultado
-	escribe(salida_char,IMoutR,IMoutG,IMoutB);
+	//escribe(salida_char,IMoutR,IMoutG,IMoutB);
+	escribe("LumLemon.jpg",Luminancia1);
+	escribe("LumPear.jpg",Luminancia2);
 	cout<<"Nueva imagen creada"<<endl;
 	
 	return 0;
