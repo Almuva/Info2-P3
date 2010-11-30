@@ -31,26 +31,26 @@ class Imagen
 	unsigned int area(){return dim[0]*dim[1];}
 	inline double & operator()(unsigned int i, unsigned int j)
 	{
-	//evita leer fuera de rango
-	const unsigned int N=1;
+		//evita leer fuera de rango
+		const unsigned int N=1;
 
-	if(i>=dim[0])
-	{
-		if(i-dim[0]<=N) //sale por abajo
+		if(i>=dim[0])
 		{
-			i=dim[0]-1;
+			if(i-dim[0]<=N) //sale por abajo
+			{
+				i=dim[0]-1;
+			}
+			else i=0; //sale por arriba
 		}
-		else i=0; //sale por arriba
-	}
-	if(j>=dim[1])
-	{
-		if(j-dim[1]<=N) //sale por la derecha
+		if(j>=dim[1])
 		{
-			j=dim[1]-1;
+			if(j-dim[1]<=N) //sale por la derecha
+			{
+				j=dim[1]-1;
+			}
+			else j=0; //sale por la izquierda
 		}
-		else j=0; //sale por la izquierda
-	}
-	return datos[i*dim[1]+j];
+		return datos[i*dim[1]+j];
 	}
 
 	float maxval();

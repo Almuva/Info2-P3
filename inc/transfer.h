@@ -5,8 +5,7 @@
 #include <iostream> 
 #include <vector>
 #include "seam_finding.h"
+#include "Imagen.h"
 
-void transfer(  Imagen & texR, Imagen & texG, Imagen & texB, 
-		unsigned int tam_Bi, 
-		Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB);
+void transferTexture(Imagen& AR,Imagen& AG,Imagen& AB,Imagen& BR,Imagen& BG,Imagen& BB,unsigned tam_Bi);
 #endif
