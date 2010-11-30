@@ -91,20 +91,20 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 			unsigned int tam_Bi, Imagen & BiR, Imagen & BiG, Imagen & BiB)
 {
      //Declaramos y llenamos una imagen con la suma de colores del margen vertical. De esta forma no hay que calcularlo cada vez.
-	Imagen LumMargenV(tam_Bi+tam_Bi/3, tam_Bi/6, 0);
-	Imagen margenV(LumMargenV.fils(), LumMargenV.cols(), 0); //auxiliar
+	Imagen LumMargenV(tam_Bi+tam_Bi/3, tam_Bi/6);
+	Imagen margenV(LumMargenV.fils(), LumMargenV.cols()); //auxiliar
 	
-	margenV.extrae(IMoutR, row, col); LumMargenV+=margenV;
-	margenV.extrae(IMoutG, row, col); LumMargenV+=margenV;
-	margenV.extrae(IMoutB, row, col); LumMargenV+=margenV;
+	margenV.extrae(IMoutR, row, col); /*margenV*=0.3;*/ LumMargenV=margenV;
+	margenV.extrae(IMoutG, row, col); /*margenV*=0.59;*/ LumMargenV+=margenV;
+	margenV.extrae(IMoutB, row, col); /*margenV*=0.11;*/ LumMargenV+=margenV;
 
      //Declaramos y llenamos una imagen con la suma de colores del margen horizontal. De esta forma no hay que calcularlo cada vez.
 	Imagen LumMargenH(tam_Bi/6, tam_Bi+tam_Bi/3, 0);
 	Imagen margenH(LumMargenH.fils(), LumMargenH.cols(), 0); //auxiliar
 	
-	margenH.extrae(IMoutR, row, col); LumMargenH+=margenH;
-	margenH.extrae(IMoutG, row, col); LumMargenH+=margenH;
-	margenH.extrae(IMoutB, row, col); LumMargenH+=margenH;
+	margenH.extrae(IMoutR, row, col); /*margenH*=0.3;*/ LumMargenH+=margenH;
+	margenH.extrae(IMoutG, row, col); /*margenH*=0.59;*/ LumMargenH+=margenH;
+	margenH.extrae(IMoutB, row, col); /*margenH*=0.11;*/ LumMargenH+=margenH;
 	
 	
      //Primera parte: Obtenemos las energías de todas las comparaciones con el margen actual. Así no hay que recorrer la textura dos veces.
@@ -245,8 +245,8 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMarge
 		pos_validas++;
 
      //Obtenemos las coordenadas aleatorias de entre las válidas.
-	pair<unsigned,unsigned> escogidas = energias[rand() % pos_validas].second;
-	//pair<unsigned,unsigned> escogidas = energias[0].second;
+	//pair<unsigned,unsigned> escogidas = energias[rand() % pos_validas].second;
+	pair<unsigned,unsigned> escogidas = energias[0].second;
 	rowBi = escogidas.first;
 	colBi = escogidas.second;		
 }
@@ -265,12 +265,8 @@ void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & B
 		col = 0;
 		while(LumMargenV(row, col) < 10E20) //10E20: valor fuera de rango.
 		{
-			/*BiR(row, col) = 10E20;
-			BiG(row, col) = 10E20;
-			BiB(row, col) = 10E20;*/
-			BiR(row, col) = 10E20;
-			BiG(row, col) = 0;
-			BiB(row, col) = 0;
+			BiR(row, col) = 10E20;BiG(row, col) = 10E20;BiB(row, col) = 10E20;
+			//BiR(row, col) = 10E20;BiG(row, col) = 0;BiB(row, col) = 0;
 			col++;
 			
 			if(col == LumMargenV.cols()) //Debugger
@@ -299,12 +295,8 @@ void marcaSegunSeamH(Imagen & LumMargenH, Imagen & BiR, Imagen & BiG, Imagen & B
 				exit(1);
 			}
 
-			/*BiR(row, col) = 10E20;
-			BiG(row, col) = 10E20;
-			BiB(row, col) = 10E20;*/
-			BiR(row, col) = 10E20;
-			BiG(row, col) = 0;
-			BiB(row, col) = 0;
+			BiR(row, col) = 10E20;BiG(row, col) = 10E20;BiB(row, col) = 10E20;
+			//BiR(row, col) = 10E20;BiG(row, col) = 0;BiB(row, col) = 0;
 		}
 	}
 }
