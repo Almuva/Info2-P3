@@ -72,25 +72,9 @@ int main(int argc,char **argv)
 	quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
 
 //Escribimos el resultado
-	cout<<"Creando nueva imagen"<<endl;
 	escribe(salida_char,IMoutR,IMoutG,IMoutB);
+	cout<<"Nueva imagen creada"<<endl;
 	
-/*
-//PRUEBA: Función comp()
-	Imagen texAll(texR.fils(), texR.cols()); texAll+=texR; texAll+=texG; texAll+=texB; 
-	Imagen comp(50,50) ,imgA(comp.fils(),comp.cols(), 0),imgB(comp.fils(),comp.cols());
-	
-	//imgA.extrae(texAll,0,0);
-	imgB.extrae(texAll,1,1);
-	
-	double enx = compara(imgA,imgB);
-	cout<<"EnergiaX: "<<enx<<endl;
-	
-	double en = compara(imgA,imgB,comp);
-	cout<<"Energia: "<<en<<endl;
-	escribe((char*)"compara.png",comp);
-*/
-
 	return 0;
 }
 
