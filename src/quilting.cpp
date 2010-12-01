@@ -1,5 +1,17 @@
 #include <quilting.h>
 
+//Simplemente calcula en número de iteraciones que se harán dado el tamaño de la imagen de salida y el incremento del bucle de llenado.
+unsigned int Calcula_Bis_agregar(Imagen & ImSalida, unsigned int increment)
+{
+	unsigned int a = ImSalida.fils()/increment;
+	if(ImSalida.fils()%increment != 0) a++; //Si Bi no cabe un nº de veces justa se añade una
+	
+	unsigned int b = ImSalida.cols()/increment;
+	if(ImSalida.cols()%increment != 0) b++; //Si Bi no cabe un nº de veces justa se añade una
+	
+	return a*b;
+}
+
 void quilting( Imagen & texR, Imagen & texG, Imagen & texB, 
 		unsigned int tam_Bi, 
 		Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB)
@@ -34,7 +46,7 @@ void quilting( Imagen & texR, Imagen & texG, Imagen & texB,
 //	int cont = 0, max_iteraciones = 5; //Debugger
 
 	//Las siguientes variables son para mostrar feedback al usuario mientras se calcula.
-	unsigned int counter = 2, num_Bis_agregar = ((IMoutR.fils()/increment)+1) * ((IMoutR.cols()/increment)+1);
+	unsigned int counter = 2, num_Bis_agregar = Calcula_Bis_agregar(IMoutR, increment);
 	
      //El siguiente bucle va llenando IMout según los valores que va retornando la función Imagen::agrega(), en "result"
 	while(1)

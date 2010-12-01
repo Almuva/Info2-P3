@@ -16,6 +16,8 @@
 #include "Imagen.h"
 #include "seam_finding.h"
 
+unsigned int Calcula_Bis_agregar(Imagen & ImSalida, unsigned int increment);
+
 void quilting(  Imagen & texR, Imagen & texG, Imagen & texB, 
 		unsigned int tam_Bi, 
 		Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB);
