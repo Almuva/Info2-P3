@@ -203,10 +203,16 @@ void Imagen::extrae(Imagen& I,unsigned int row,unsigned int col)
 	unsigned int fils=dim[0]+row,cols=dim[1]+col,i=0;
 	
 	//check: no se pueden pedir valores fuera de la imagen.
-	if(I.fils()<fils || I.cols()<cols)
+	if(I.fils()<fils)
 	{
-		return;
+		fils = I.fils()-1;
 	}
+
+	if(I.cols()<cols)
+	{
+		cols = I.cols()-1;
+	}
+	
 
 	//bucle de copia
 	for(unsigned int f=row;f<fils;f++)

@@ -31,7 +31,10 @@ void quilting( Imagen & texR, Imagen & texG, Imagen & texB,
 	
 	col += increment;
 	
-//	int cont = 0, max_iteraciones = 7; //Debugger
+//	int cont = 0, max_iteraciones = 5; //Debugger
+
+	//Las siguientes variables son para mostrar feedback al usuario mientras se calcula.
+	unsigned int counter = 2, num_Bis_agregar = ((IMoutR.fils()/increment)+1) * ((IMoutR.cols()/increment)+1);
 	
      //El siguiente bucle va llenando IMout según los valores que va retornando la función Imagen::agrega(), en "result"
 	while(1)
@@ -47,6 +50,10 @@ void quilting( Imagen & texR, Imagen & texG, Imagen & texB,
 			IMoutB.agrega(BiB, row, col);
 			
 			col += increment;
+			
+			std::cout<<"Bi's agregados: "<<counter++<<" de "<<num_Bis_agregar<<std::endl;
+			
+//			escribe((char*)"salida_parcial.png", IMoutR, IMoutG, IMoutB);
 			
 //			std::cout<<"caso normal"<<std::endl;
 			
@@ -69,14 +76,13 @@ void quilting( Imagen & texR, Imagen & texG, Imagen & texB,
 void escogeBiAleatorio(	Imagen & BiR, Imagen & BiG, Imagen & BiB, 
 			Imagen & texR, Imagen & texG, Imagen & texB)
 {
-	unsigned int rowBi, colBi, tam_Bi = BiR.fils(); //Recordamos: Bi es cuadrado
+	unsigned int rowBi, colBi, tam_Bi = BiR.fils(); //Recordamos: Bi es cuadrado e incluye los márgenes
 	
-	unsigned int tam_margen = tam_Bi/6;
-	
-	unsigned int max = texR.fils()-tam_Bi-2*tam_margen; //Tamaño Bi + 2 márgenes.
+	unsigned int max = texR.fils()-tam_Bi; //Tamaño Bi + 2 márgenes.
+
 	rowBi = rand() % max+1; //valor aleatorio desde 0 hasta max
 		
-	max = texR.cols()-tam_Bi-2*tam_margen; 
+	max = texR.cols()-tam_Bi; 
 	colBi = rand() % max+1;
 	
 	BiR.extrae(texR, rowBi, colBi);
@@ -105,8 +111,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 	
 	margenH.extrae(IMoutR, row, col); LumMargenH+=margenH;
 	margenH.extrae(IMoutG, row, col); LumMargenH+=margenH;
-	margenH.extrae(IMoutB, row, col); LumMargenH+=margenH;
-	
+	margenH.extrae(IMoutB, row, col); LumMargenH+=margenH;	
 	
      //Primera parte: Obtenemos las energías de todas las comparaciones con el margen actual. Así no hay que recorrer la textura dos veces.
 	//En cada posición del vector siguiente se guarda una energía y dos coordenadas. La energía es el resultante de la comparación de los...
@@ -276,6 +281,10 @@ void marcaSegunSeamV(Imagen & LumMargenV, Imagen & BiR, Imagen & BiG, Imagen & B
 				exit(1);
 			}
 		}
+		//También pintamos los valores por donde pasaría el seam
+		BiR(row, col) = 10E20;
+		BiG(row, col) = 10E20;
+		BiB(row, col) = 10E20;
 	}
 }
 
@@ -305,6 +314,10 @@ void marcaSegunSeamH(Imagen & LumMargenH, Imagen & BiR, Imagen & BiG, Imagen & B
 			}
 		
 		}
+		//También pintamos los valores por donde pasaría el seam
+		BiR(row, col) = 10E20;
+		BiG(row, col) = 10E20;
+		BiB(row, col) = 10E20;
 	}
 }
 
