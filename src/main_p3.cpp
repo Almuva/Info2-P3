@@ -18,7 +18,7 @@ using namespace Magick;
 
 void uso()
 {
-	fprintf(stderr,"Uso: prueba texture target imagen_salida tamanyo_lado_Bi\n");
+	fprintf(stderr,"Uso: prueba  target imagen_salida tamanyo_lado_Bi\n");
 	exit(1);
 }
 
@@ -36,22 +36,22 @@ int main(int argc,char **argv)
 	unsigned tam_Bi = abs( atoi(*argv++) );
 	strcat(salida_char,".png");
 
-	Imagen tex1R,tex1G,tex1B,tex2R,tex2G,tex2B;
+	Imagen textureR,textureG,textureB,targetR,targetG,targetB;
 
-	tex1R=lee(entrada_char1,0);
-	tex1G=lee(entrada_char1,1);
-	tex1B=lee(entrada_char1,2);
+	textureR=lee(entrada_char1,0);
+	textureG=lee(entrada_char1,1);
+	textureB=lee(entrada_char1,2);
 
-	tex2R=lee(entrada_char2,0);
-	tex2G=lee(entrada_char2,1);
-	tex2B=lee(entrada_char2,2);
+	targetR=lee(entrada_char2,0);
+	targetG=lee(entrada_char2,1);
+	targetB=lee(entrada_char2,2);
 
+	float alpha=1.0;
 	//transfiere la textura de la imagen de la izquierda a la de la derecha
-	transferTexture(tex1R,tex1G,tex1B,tex2R,tex2G,tex2B,tam_Bi);
+	transferTexture(textureR,textureG,textureB,targetR,targetG,targetB,tam_Bi,alpha);
 
-//Escribimos el resultado
-	escribe(salida_char,tex2R,tex2G,tex2B);
-	cout<<"Nueva imagen creada"<<endl;
+	//Escribimos el resultado
+//desde transfer.cpp
 	
 	return 0;
 }

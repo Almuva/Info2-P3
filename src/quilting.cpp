@@ -153,7 +153,7 @@ void escogeSiguienteBi(	Imagen & IMoutR, Imagen & IMoutG, Imagen & IMoutB,
 
 //Aplica el significado de "energía" aplicado en la práctica y la retorna.
 //Las dos imágenes serán siempre dos márgenes.
-double compara(const Imagen& A,Imagen& B)
+double compara(const Imagen& A,const Imagen& B)
 {
 	if(A.dim[0]!=B.dim[0] || A.dim[1]!=B.dim[1])
 	{
