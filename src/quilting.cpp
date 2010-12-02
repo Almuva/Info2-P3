@@ -1,4 +1,7 @@
 #include <quilting.h>
+bool transfer=false;
+Imagen LumA,LumB;
+unsigned int midaBi;
 
 //Simplemente calcula en número de iteraciones que se harán dado el tamaño de la imagen de salida y el incremento del bucle de llenado.
 unsigned int Calcula_Bis_agregar(Imagen & ImSalida, unsigned int increment)
@@ -33,16 +36,30 @@ void quilting( Imagen & texR, Imagen & texG, Imagen & texB,
 	Imagen LumTex(texR.fils(), texR.cols(), 0);
 	LumTex+=texR; LumTex+=texG; LumTex+=texB;
 	
+	if(transfer)
+	{
+		Imagen imagenAuxuliar;midaBi=tam_Bi;
+
+		//cada luminancia es una imagen a parte que guarda la luminancia de la imagen de entrada
+		LumA=texR; LumA*=0.3;
+		imagenAuxuliar=texG; imagenAuxuliar*=0.59; LumA+=imagenAuxuliar;
+		imagenAuxuliar=texB; imagenAuxuliar*=0.11; LumA+=imagenAuxuliar;
+
+		LumB=IMoutR; LumB*=0.3;
+		imagenAuxuliar=IMoutG; imagenAuxuliar*=0.59; LumB+=imagenAuxuliar;
+		imagenAuxuliar=IMoutB; imagenAuxuliar*=0.11; LumB+=imagenAuxuliar;
+	}
+	else
+	{
+		 //Llevamos a cabo la primera inserción de Bi, la aleatoria.
+		escogeBiAleatorio(BiR, BiG, BiB, texR, texG, texB);
 	
-     //Llevamos a cabo la primera inserción de Bi, la aleatoria.
-	escogeBiAleatorio(BiR, BiG, BiB, texR, texG, texB);
+		IMoutR.agrega(BiR, row, col);
+		IMoutG.agrega(BiG, row, col);
+		IMoutB.agrega(BiB, row, col);
 	
-	IMoutR.agrega(BiR, row, col);
-	IMoutG.agrega(BiG, row, col);
-	IMoutB.agrega(BiB, row, col);
-	
-	col += increment;
-	
+		col += increment;
+	}
 //	int cont = 0, max_iteraciones = 5; //Debugger
 
 	//Las siguientes variables son para mostrar feedback al usuario mientras se calcula.
@@ -92,10 +109,19 @@ void escogeBiAleatorio(	Imagen & BiR, Imagen & BiG, Imagen & BiB,
 	
 	unsigned int max = texR.fils()-tam_Bi; //Tamaño Bi + 2 márgenes.
 
-	rowBi = rand() % max+1; //valor aleatorio desde 0 hasta max
+	if(transfer)
+	{
+		rowBi = rand() % max+1; //valor aleatorio desde 0 hasta max
+		max = texR.cols()-tam_Bi; 
+		colBi = rand() % max+1;
+	}
+	else
+	{
+		rowBi = rand() % max+1; //valor aleatorio desde 0 hasta max
 		
-	max = texR.cols()-tam_Bi; 
-	colBi = rand() % max+1;
+		max = texR.cols()-tam_Bi; 
+		colBi = rand() % max+1;
+	}
 	
 	BiR.extrae(texR, rowBi, colBi);
 	BiG.extrae(texG, rowBi, colBi);
@@ -209,6 +235,19 @@ double compara(const Imagen& A,const Imagen& B,Imagen& Result)
 	return totalEnerg;
 }
 
+double comparaBi(Imagen& A,unsigned iniciAx,unsigned iniciAy,Imagen& B,unsigned iniciBx,unsigned iniciBy)
+{
+	double aux,totalEnerg=0;
+
+	for(unsigned int i=0;i<midaBi;i++)
+		for(unsigned int j=0;j<midaBi;j++)
+		{	
+			aux=A(i+iniciAx,j+iniciAy)-B(i+iniciBx,j+iniciBy);
+			totalEnerg+=aux*aux;
+		}
+	return totalEnerg;
+}
+
 //Calcula las energías de todos los márgenes en forma de L (dividido en dos márgenes, a su vez) en la textura y...
 //...los guarda en el vector energías para su posterior procesamiento.
 void GuardaEnergiasMargenes(Imagen & LumTex,Imagen & LumMargenV,Imagen & LumMargenH,
@@ -253,17 +292,28 @@ void CoordenadasNuevasBi(Imagen & LumTex, Imagen & LumMargenV, Imagen & LumMarge
 	vector<pair<double,pair<unsigned,unsigned> > >& energias,
 	unsigned int & rowBi, unsigned int & colBi)
 {
-	const double min_energia=energias[0].first; //Recordamos: El vector está ordenado.
-	const double error = min_energia*0.1;
-	
 	unsigned int pos_validas = 0;
-	
-     //Como el vector energías está ordenado, establecemos la posición en la que sus energías posteriores dejen de ser válidas.
-	while(energias[pos_validas].first-min_energia < error)
-		pos_validas++;
+	pair<unsigned,unsigned> escogidas;
 
-     //Obtenemos las coordenadas aleatorias de entre las válidas.
-	pair<unsigned,unsigned> escogidas = energias[rand() % pos_validas].second;
+	if(transfer)
+	{
+		for(unsigned i=0;i<energias.size();i++)
+		{
+			unsigned iniciBx=energias[i].second.first,iniciBy=energias[i].second.second;
+			energias[i].first+=comparaBi(LumA,rowBi,colBi,LumB,iniciBx,iniciBy)*8;
+		}
+		sort(energias.begin(),energias.end());
+	}
+	double min_energia=energias[0].first; //Recordamos: El vector está ordenado.
+	double error = min_energia*0.1;
+	
+	//Como el vector energías está ordenado, establecemos la posición en la que sus energías posteriores dejen de ser válidas.
+	while(energias[pos_validas].first-min_energia < error)
+	pos_validas++;
+  
+	//Obtenemos las coordenadas aleatorias de entre las válidas.
+	escogidas = energias[rand() % pos_validas].second;
+
 	rowBi = escogidas.first;
 	colBi = escogidas.second;		
 }

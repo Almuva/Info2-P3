@@ -51,30 +51,38 @@ int main(int argc,char **argv)
 	int tam_Bi = abs( atoi(*argv++) );
 	int rows_IMout = abs( atoi(*argv++) );
 	int cols_IMout = abs( atoi(*argv++) );
-	strcat(salida_char,".png");
 
 	Imagen texR,texG,texB;
+	//se crea cada componente de la imagen de salida
+	Imagen IMoutR(rows_IMout, cols_IMout),IMoutG(rows_IMout, cols_IMout),IMoutB(rows_IMout, cols_IMout);
 
 	texR=lee(entrada_char,0);
 	texG=lee(entrada_char,1);
 	texB=lee(entrada_char,2);
-
-//comprueba que los parámetros sean correctos
-	casos_error(texR, tam_Bi, rows_IMout, cols_IMout);
-
-//se crea cada componente de la imagen de salida, todo a cero
-	Imagen IMoutR(rows_IMout, cols_IMout, 0);
-	Imagen IMoutG(rows_IMout, cols_IMout, 0);
-	Imagen IMoutB(rows_IMout, cols_IMout, 0);
 	
+	bool transfer=false;
 	
+	if(transfer)
+	{
+		IMoutR=lee(salida_char,0);
+		IMoutG=lee(salida_char,1);
+		IMoutB=lee(salida_char,2);
+		rows_IMout=IMoutR.fils();
+		cols_IMout=IMoutR.cols();
+	}
+	else
+	{
+		//comprueba que los parámetros sean correctos
+		casos_error(texR, tam_Bi, rows_IMout, cols_IMout);
+	}
+
 //La función quilting() emprea el bucle principal de llenado de IMout con Bi's
 	quilting(texR, texG, texB, tam_Bi, IMoutR, IMoutG, IMoutB);
 
 //Escribimos el resultado
-	escribe(salida_char,IMoutR,IMoutG,IMoutB);
+	std::string s="result "+std::string(salida_char);
+	escribe((char*)s.c_str(),IMoutR,IMoutG,IMoutB);
 	cout<<"Nueva imagen creada"<<endl;
-	
 	return 0;
 }
 

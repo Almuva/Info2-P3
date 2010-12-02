@@ -34,6 +34,8 @@ double compara(const Imagen& A,const Imagen& B,Imagen& Result);
 
 double compara(const Imagen& A,const Imagen& B);
 
+double comparaBi(Imagen& A,unsigned iniciAx,unsigned iniciAy,Imagen& B,unsigned iniciBx,unsigned iniciBy);
+
 void GuardaEnergiasMargenes(Imagen & LumTex,Imagen & LumMargenV, Imagen & LumMargenH,
 	vector<pair<double,pair<unsigned,unsigned> > >& energias);
 
